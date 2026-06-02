@@ -1,0 +1,16 @@
+{
+  "plugins": {
+    "vercel": {
+      "enabled": true
+    },
+    "posthog": {
+      "enabled": true
+    },
+    "sentry": {
+      "enabled": true
+    },
+    "resend": {
+      "enabled": true
+    }
+  }
+}
