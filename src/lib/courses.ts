@@ -20,7 +20,8 @@ export type DbCourse = {
   level: CourseLevel;
   duration_hours: number;
   lessons: number;
-  price_rub: number;
+  price_usd: number;
+  stripe_price_id: string | null;
   tags: string[];
   published: boolean;
   created_at: string;
@@ -37,7 +38,8 @@ export type Course = {
   level: CourseLevel;
   durationHours: number;
   lessons: number;
-  priceRub: number;
+  priceUsd: number;
+  stripePriceId: string | null;
   tags: string[];
 };
 
@@ -65,15 +67,17 @@ export function localizedCourse(course: DbCourse, locale: Locale): Course {
     level: course.level,
     durationHours: course.duration_hours,
     lessons: course.lessons,
-    priceRub: course.price_rub,
+    priceUsd: course.price_usd,
+    stripePriceId: course.stripe_price_id,
     tags: course.tags,
   };
 }
 
-export function formatPrice(priceRub: number, locale: string): string {
-  return new Intl.NumberFormat(locale, {
+export function formatPrice(priceUsd: number): string {
+  if (priceUsd === 0) return "";
+  return new Intl.NumberFormat("en-US", {
     style: "currency",
-    currency: "RUB",
+    currency: "USD",
     maximumFractionDigits: 0,
-  }).format(priceRub);
+  }).format(priceUsd / 100);
 }

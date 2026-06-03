@@ -1,4 +1,4 @@
-import { useLocale, useTranslations } from "next-intl";
+import { useTranslations } from "next-intl";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -15,7 +15,6 @@ import { formatPrice, type Course } from "@/lib/courses";
 
 export function CourseCard({ course }: { course: Course }) {
   const t = useTranslations("Course");
-  const locale = useLocale();
 
   const formatLabels = {
     course: t("formatCourse"),
@@ -28,8 +27,7 @@ export function CourseCard({ course }: { course: Course }) {
     advanced: t("levelAdvanced"),
   };
 
-  const price =
-    course.priceRub === 0 ? t("free") : formatPrice(course.priceRub, locale);
+  const price = course.priceUsd === 0 ? t("free") : formatPrice(course.priceUsd);
 
   return (
     <Card className="h-full transition-shadow hover:ring-foreground/20">

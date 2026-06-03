@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import { getLocale, getTranslations, setRequestLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
+import { Suspense } from "react";
 
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -11,14 +11,13 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { EnrollCard, EnrollCardFallback } from "@/components/enroll-card";
 import { Link } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/routing";
 import { formatPrice, localizedCourse, type DbCourse } from "@/lib/courses";
 import { createPublicClient } from "@/lib/supabase/public";
 
-export const revalidate = 3600;
-
-type Props = { params: Promise<{ locale: string; slug: string }> };
+type Props = { params: Promise<{ locale: string; slug: string }>; searchParams: Promise<{ session_id?: string }> };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug, locale } = await params;
@@ -45,8 +44,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return { title, description };
 }
 
-export default async function CoursePage({ params }: Props) {
+export default async function CoursePage({ params, searchParams }: Props) {
   const { locale, slug } = await params;
+  const { session_id } = await searchParams;
   setRequestLocale(locale);
 
   const supabase = createPublicClient();
@@ -73,8 +73,8 @@ export default async function CoursePage({ params }: Props) {
     intermediate: t("levelIntermediate"),
     advanced: t("levelAdvanced"),
   };
-  const price =
-    course.priceRub === 0 ? t("free") : formatPrice(course.priceRub, activeLocale);
+
+  const displayPrice = course.priceUsd === 0 ? t("free") : formatPrice(course.priceUsd);
 
   return (
     <div className="mx-auto w-full max-w-4xl px-4 py-16">
@@ -125,19 +125,16 @@ export default async function CoursePage({ params }: Props) {
         </article>
 
         <aside className="lg:sticky lg:top-24 lg:self-start">
-          <Card>
-            <CardHeader>
-              <CardTitle className="font-heading text-2xl">{price}</CardTitle>
-            </CardHeader>
-            <CardContent className="text-sm text-muted-foreground">
-              {t("accessNote")}
-            </CardContent>
-            <CardFooter>
-              <Button className="w-full" nativeButton={false} render={<Link href="/login" />}>
-                {t("enroll")}
-              </Button>
-            </CardFooter>
-          </Card>
+          <Suspense fallback={<EnrollCardFallback priceUsd={course.priceUsd} />}>
+            <EnrollCard
+              courseId={course.id}
+              stripePriceId={course.stripePriceId}
+              priceUsd={course.priceUsd}
+              locale={activeLocale}
+              slug={slug}
+              sessionId={session_id}
+            />
+          </Suspense>
         </aside>
       </div>
     </div>
