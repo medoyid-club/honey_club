@@ -4,18 +4,30 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { CourseCard } from "@/components/course-card";
 import { Link } from "@/i18n/navigation";
-import { courses } from "@/lib/courses";
+import type { Locale } from "@/i18n/routing";
+import { localizedCourse, type DbCourse } from "@/lib/courses";
+import { createPublicClient } from "@/lib/supabase/public";
 
-type Props = {
-  params: Promise<{ locale: string }>;
-};
+export const revalidate = 3600;
+
+type Props = { params: Promise<{ locale: string }> };
 
 export default async function Home({ params }: Props) {
   const { locale } = await params;
   setRequestLocale(locale);
   const t = await getTranslations("Home");
 
-  const featuredCourses = courses.slice(0, 3);
+  const supabase = createPublicClient();
+  const { data: rows } = await supabase
+    .from("courses")
+    .select("*")
+    .eq("published", true)
+    .order("created_at")
+    .limit(3);
+
+  const featured = (rows as DbCourse[] ?? []).map((c) =>
+    localizedCourse(c, locale as Locale)
+  );
 
   const features = [
     { title: t("featureCoursesTitle"), description: t("featureCoursesDesc") },
@@ -45,34 +57,35 @@ export default async function Home({ params }: Props) {
 
       <section id="about" className="border-t border-foreground/10 bg-muted/30">
         <div className="mx-auto grid w-full max-w-6xl gap-6 px-4 py-16 sm:grid-cols-3">
-          {features.map((feature) => (
-            <div key={feature.title} className="space-y-2">
-              <h2 className="font-heading text-xl font-medium">{feature.title}</h2>
-              <p className="text-sm text-muted-foreground">{feature.description}</p>
+          {features.map((f) => (
+            <div key={f.title} className="space-y-2">
+              <h2 className="font-heading text-xl font-medium">{f.title}</h2>
+              <p className="text-sm text-muted-foreground">{f.description}</p>
             </div>
           ))}
         </div>
       </section>
 
-      <section className="mx-auto w-full max-w-6xl px-4 py-16">
-        <div className="mb-8 flex items-end justify-between gap-4">
-          <div>
-            <h2 className="font-heading text-2xl font-semibold tracking-tight">
-              {t("popularTitle")}
-            </h2>
-            <p className="text-sm text-muted-foreground">{t("popularSubtitle")}</p>
+      {featured.length > 0 && (
+        <section className="mx-auto w-full max-w-6xl px-4 py-16">
+          <div className="mb-8 flex items-end justify-between gap-4">
+            <div>
+              <h2 className="font-heading text-2xl font-semibold tracking-tight">
+                {t("popularTitle")}
+              </h2>
+              <p className="text-sm text-muted-foreground">{t("popularSubtitle")}</p>
+            </div>
+            <Button variant="ghost" render={<Link href="/courses" />}>
+              {t("allCourses")}
+            </Button>
           </div>
-          <Button variant="ghost" render={<Link href="/courses" />}>
-            {t("allCourses")}
-          </Button>
-        </div>
-
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {featuredCourses.map((course) => (
-            <CourseCard key={course.slug} course={course} />
-          ))}
-        </div>
-      </section>
+          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {featured.map((course) => (
+              <CourseCard key={course.slug} course={course} />
+            ))}
+          </div>
+        </section>
+      )}
     </>
   );
 }

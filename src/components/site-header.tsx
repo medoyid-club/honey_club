@@ -2,6 +2,7 @@ import { useTranslations } from "next-intl";
 
 import { LanguageSwitcher } from "@/components/language-switcher";
 import { ThemeToggle } from "@/components/theme-toggle";
+import { UserNav } from "@/components/user-nav";
 import { Button } from "@/components/ui/button";
 import { Link } from "@/i18n/navigation";
 
@@ -37,14 +38,7 @@ export function SiteHeader() {
         <div className="flex items-center gap-2">
           <LanguageSwitcher />
           <ThemeToggle />
-          <Button
-            variant="ghost"
-            size="sm"
-            className="hidden sm:inline-flex"
-            render={<Link href="/login" />}
-          >
-            {t("login")}
-          </Button>
+          <UserNav />
           <Button size="sm" render={<Link href="/courses" />}>
             {t("start")}
           </Button>

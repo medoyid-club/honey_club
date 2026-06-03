@@ -24,7 +24,7 @@
     "featureCoursesTitle": "Courses & lectures",
     "featureCoursesDesc": "Structured programs from practitioners: from self-discovery basics to leadership.",
     "featureProfileTitle": "Character profile",
-    "featureProfileDesc": "Study and develop your “Self” profile — your strengths and goals.",
+    "featureProfileDesc": "Study and develop your \u201cSelf\u201d profile \u2014 your strengths and goals.",
     "featureSocialTitle": "Social environment",
     "featureSocialDesc": "Coming soon: a world map, quests and compatible contacts by interests and goals.",
     "popularTitle": "Popular courses",
@@ -55,9 +55,14 @@
   },
   "Login": {
     "title": "Sign in to Honey Club",
-    "description": "Authentication will appear here after we connect Supabase Auth.",
-    "note": "For now this page is a placeholder. Next step: enable email and social sign-in.",
-    "toCourses": "Go to courses for now"
+    "description": "Sign in or create an account to start learning.",
+    "loginTab": "Sign in",
+    "registerTab": "Register",
+    "email": "Email",
+    "password": "Password",
+    "loginBtn": "Sign in",
+    "registerBtn": "Create account",
+    "logout": "Sign out"
   },
   "Footer": {
     "tagline": "Learning platform and social environment for personal growth.",
