@@ -25,12 +25,44 @@
 
 ## Структура проекта
 
-> Каркас приложения будет добавлен на следующем шаге.
+```
+src/
+  app/
+    layout.tsx            # корневой layout (header + footer)
+    page.tsx              # главная страница
+    courses/
+      page.tsx            # каталог курсов
+      [slug]/page.tsx     # страница курса
+    login/page.tsx        # вход (заглушка, до Supabase Auth)
+  components/
+    site-header.tsx
+    site-footer.tsx
+    course-card.tsx
+    ui/                   # компоненты shadcn/ui (base-nova)
+  lib/
+    courses.ts            # демо-данные курсов
+    utils.ts
+```
 
 ## Локальный запуск
 
-> Инструкции появятся после инициализации каркаса Next.js.
+```bash
+npm install
+npm run dev      # http://localhost:3000
+npm run build    # production-сборка
+npm run lint     # ESLint
+```
+
+Требования: Node.js 20+ (проверено на 22).
 
 ## Переменные окружения
 
-Секреты хранятся в `.env.local` (не коммитится). Шаблон будет добавлен как `.env.example`.
+Секреты хранятся в `.env.local` (не коммитится). Шаблон будет добавлен как `.env.example` при подключении Supabase/Stripe.
+
+## Дальнейшие шаги
+
+- [ ] Подключить Supabase (БД, Auth, Storage)
+- [ ] Реальные данные курсов вместо демо
+- [ ] Оплата через Stripe
+- [ ] Страницы FAQ, контакты, правовые документы
+- [ ] Деплой на Vercel
