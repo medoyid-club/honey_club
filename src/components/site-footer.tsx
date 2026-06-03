@@ -1,31 +1,35 @@
-import Link from "next/link";
+import { useTranslations } from "next-intl";
 
-const columns = [
-  {
-    title: "Платформа",
-    links: [
-      { href: "/courses", label: "Курсы" },
-      { href: "/#about", label: "О проекте" },
-      { href: "/#authors", label: "Авторы" },
-    ],
-  },
-  {
-    title: "Поддержка",
-    links: [
-      { href: "/faq", label: "FAQ" },
-      { href: "/contacts", label: "Контакты" },
-    ],
-  },
-  {
-    title: "Правовое",
-    links: [
-      { href: "/privacy", label: "Конфиденциальность" },
-      { href: "/terms", label: "Пользовательское соглашение" },
-    ],
-  },
-];
+import { Link } from "@/i18n/navigation";
 
 export function SiteFooter() {
+  const t = useTranslations("Footer");
+
+  const columns = [
+    {
+      title: t("platform"),
+      links: [
+        { href: "/courses", label: t("linkCourses") },
+        { href: "/#about", label: t("linkAbout") },
+        { href: "/#authors", label: t("linkAuthors") },
+      ],
+    },
+    {
+      title: t("support"),
+      links: [
+        { href: "/faq", label: t("linkFaq") },
+        { href: "/contacts", label: t("linkContacts") },
+      ],
+    },
+    {
+      title: t("legal"),
+      links: [
+        { href: "/privacy", label: t("linkPrivacy") },
+        { href: "/terms", label: t("linkTerms") },
+      ],
+    },
+  ];
+
   return (
     <footer className="border-t border-foreground/10 bg-muted/30">
       <div className="mx-auto grid w-full max-w-6xl gap-8 px-4 py-12 sm:grid-cols-2 lg:grid-cols-4">
@@ -34,9 +38,7 @@ export function SiteFooter() {
             <span aria-hidden className="text-xl">🍯</span>
             Honey&nbsp;Club
           </Link>
-          <p className="text-sm text-muted-foreground">
-            Обучающая платформа и социальная среда для развития личности.
-          </p>
+          <p className="text-sm text-muted-foreground">{t("tagline")}</p>
         </div>
 
         {columns.map((column) => (
@@ -57,7 +59,7 @@ export function SiteFooter() {
 
       <div className="border-t border-foreground/10 py-6">
         <p className="mx-auto w-full max-w-6xl px-4 text-xs text-muted-foreground">
-          © {new Date().getFullYear()} Honey Club. Все права защищены.
+          {t("rights", { year: new Date().getFullYear() })}
         </p>
       </div>
     </footer>

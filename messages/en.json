@@ -1,0 +1,76 @@
+{
+  "Nav": {
+    "courses": "Courses",
+    "about": "About",
+    "authors": "Authors",
+    "login": "Sign in",
+    "start": "Get started"
+  },
+  "Theme": {
+    "toggle": "Toggle theme",
+    "light": "Light",
+    "dark": "Dark",
+    "system": "System"
+  },
+  "Language": {
+    "label": "Language"
+  },
+  "Home": {
+    "badge": "Learning + game",
+    "title": "Learn, grow and find your people at Honey Club",
+    "subtitle": "Online courses, lectures and seminars for personal growth. Next stage — a social RPG environment with a world map, quests and matching by interests and personality type.",
+    "ctaCourses": "Browse courses",
+    "ctaAbout": "About",
+    "featureCoursesTitle": "Courses & lectures",
+    "featureCoursesDesc": "Structured programs from practitioners: from self-discovery basics to leadership.",
+    "featureProfileTitle": "Character profile",
+    "featureProfileDesc": "Study and develop your “Self” profile — your strengths and goals.",
+    "featureSocialTitle": "Social environment",
+    "featureSocialDesc": "Coming soon: a world map, quests and compatible contacts by interests and goals.",
+    "popularTitle": "Popular courses",
+    "popularSubtitle": "Start with what resonates with you.",
+    "allCourses": "All courses →"
+  },
+  "Courses": {
+    "title": "Course catalog",
+    "subtitle": "Courses, lectures and seminars — choose the format and level that fit you."
+  },
+  "Course": {
+    "author": "Author",
+    "duration": "Duration",
+    "hoursShort": "h",
+    "details": "Details",
+    "free": "Free",
+    "back": "← Back to catalog",
+    "accessNote": "Access to materials right after payment. Learn at your own pace.",
+    "enroll": "Enroll in course",
+    "lessons": "Lessons",
+    "meta": "{lessons} lessons · {hours} h",
+    "formatCourse": "Course",
+    "formatLecture": "Lecture",
+    "formatSeminar": "Seminar",
+    "levelBeginner": "Beginner",
+    "levelIntermediate": "Intermediate",
+    "levelAdvanced": "Advanced"
+  },
+  "Login": {
+    "title": "Sign in to Honey Club",
+    "description": "Authentication will appear here after we connect Supabase Auth.",
+    "note": "For now this page is a placeholder. Next step: enable email and social sign-in.",
+    "toCourses": "Go to courses for now"
+  },
+  "Footer": {
+    "tagline": "Learning platform and social environment for personal growth.",
+    "platform": "Platform",
+    "support": "Support",
+    "legal": "Legal",
+    "linkCourses": "Courses",
+    "linkAbout": "About",
+    "linkAuthors": "Authors",
+    "linkFaq": "FAQ",
+    "linkContacts": "Contacts",
+    "linkPrivacy": "Privacy",
+    "linkTerms": "Terms of Service",
+    "rights": "© {year} Honey Club. All rights reserved."
+  }
+}

@@ -1,6 +1,6 @@
-export type CourseLevel = "Начальный" | "Средний" | "Продвинутый";
+export type CourseLevel = "beginner" | "intermediate" | "advanced";
 
-export type CourseFormat = "Курс" | "Лекция" | "Семинар";
+export type CourseFormat = "course" | "lecture" | "seminar";
 
 export type Course = {
   slug: string;
@@ -20,13 +20,12 @@ export const courses: Course[] = [
   {
     slug: "osnovy-samopoznaniya",
     title: "Основы самопознания",
-    summary:
-      "Базовый курс о типах личности, сильных сторонах и зонах роста.",
+    summary: "Базовый курс о типах личности, сильных сторонах и зонах роста.",
     description:
       "Вводный курс, с которого начинается путь в Honey Club. Разбираем модели личности, учимся определять свой темперамент, ценности и цели. К концу курса вы соберёте первый профиль персонажа «Я».",
     author: "Анна Светлова",
-    format: "Курс",
-    level: "Начальный",
+    format: "course",
+    level: "beginner",
     durationHours: 12,
     lessons: 18,
     priceRub: 4900,
@@ -39,8 +38,8 @@ export const courses: Course[] = [
     description:
       "Практический курс о навыках общения: активное слушание, эмпатия, управление конфликтами и построение доверия. Много упражнений и разборов реальных ситуаций.",
     author: "Игорь Дронов",
-    format: "Курс",
-    level: "Средний",
+    format: "course",
+    level: "intermediate",
     durationHours: 16,
     lessons: 24,
     priceRub: 6900,
@@ -53,8 +52,8 @@ export const courses: Course[] = [
     description:
       "Семинар о том, как ставить достижимые цели и выстраивать стратегию жизни и карьеры. Разберём методики планирования и научимся отслеживать прогресс.",
     author: "Мария Кольцова",
-    format: "Семинар",
-    level: "Средний",
+    format: "seminar",
+    level: "intermediate",
     durationHours: 8,
     lessons: 10,
     priceRub: 5400,
@@ -67,8 +66,8 @@ export const courses: Course[] = [
     description:
       "Продвинутый курс для тех, кто ведёт за собой. Изучаем командные роли, мотивацию, делегирование и здоровую обратную связь.",
     author: "Сергей Орлов",
-    format: "Курс",
-    level: "Продвинутый",
+    format: "course",
+    level: "advanced",
     durationHours: 20,
     lessons: 28,
     priceRub: 9900,
@@ -81,8 +80,8 @@ export const courses: Course[] = [
     description:
       "Бесплатная вводная лекция о том, как игровые механики помогают учиться и расти. Заглянем за кулисы будущей социальной RPG-карты Honey Club.",
     author: "Команда Honey Club",
-    format: "Лекция",
-    level: "Начальный",
+    format: "lecture",
+    level: "beginner",
     durationHours: 2,
     lessons: 1,
     priceRub: 0,
@@ -94,9 +93,8 @@ export function getCourseBySlug(slug: string): Course | undefined {
   return courses.find((course) => course.slug === slug);
 }
 
-export function formatPrice(priceRub: number): string {
-  if (priceRub === 0) return "Бесплатно";
-  return new Intl.NumberFormat("ru-RU", {
+export function formatPrice(priceRub: number, locale: string): string {
+  return new Intl.NumberFormat(locale, {
     style: "currency",
     currency: "RUB",
     maximumFractionDigits: 0,
