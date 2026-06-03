@@ -45,10 +45,10 @@ export default async function Home({ params }: Props) {
           </h1>
           <p className="max-w-2xl text-lg text-muted-foreground">{t("subtitle")}</p>
           <div className="flex flex-col gap-3 sm:flex-row">
-            <Button size="lg" render={<Link href="/courses" />}>
+            <Button size="lg" nativeButton={false} render={<Link href="/courses" />}>
               {t("ctaCourses")}
             </Button>
-            <Button size="lg" variant="outline" render={<Link href="/#about" />}>
+            <Button size="lg" variant="outline" nativeButton={false} render={<Link href="/#about" />}>
               {t("ctaAbout")}
             </Button>
           </div>
@@ -75,7 +75,7 @@ export default async function Home({ params }: Props) {
               </h2>
               <p className="text-sm text-muted-foreground">{t("popularSubtitle")}</p>
             </div>
-            <Button variant="ghost" render={<Link href="/courses" />}>
+            <Button variant="ghost" nativeButton={false} render={<Link href="/courses" />}>
               {t("allCourses")}
             </Button>
           </div>

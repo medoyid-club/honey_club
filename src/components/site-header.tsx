@@ -1,8 +1,9 @@
 import { useTranslations } from "next-intl";
+import { Suspense } from "react";
 
 import { LanguageSwitcher } from "@/components/language-switcher";
 import { ThemeToggle } from "@/components/theme-toggle";
-import { UserNav } from "@/components/user-nav";
+import { UserAuth, UserAuthFallback } from "@/components/user-auth";
 import { Button } from "@/components/ui/button";
 import { Link } from "@/i18n/navigation";
 
@@ -38,8 +39,10 @@ export function SiteHeader() {
         <div className="flex items-center gap-2">
           <LanguageSwitcher />
           <ThemeToggle />
-          <UserNav />
-          <Button size="sm" render={<Link href="/courses" />}>
+          <Suspense fallback={<UserAuthFallback />}>
+            <UserAuth />
+          </Suspense>
+          <Button nativeButton={false} size="sm" render={<Link href="/courses" />}>
             {t("start")}
           </Button>
         </div>

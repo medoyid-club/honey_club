@@ -57,7 +57,7 @@ export function CourseCard({ course }: { course: Course }) {
         <span className="font-heading text-base font-semibold text-foreground">
           {price}
         </span>
-        <Button size="sm" render={<Link href={`/courses/${course.slug}`} />}>
+        <Button size="sm" nativeButton={false} render={<Link href={`/courses/${course.slug}`} />}>
           {t("details")}
         </Button>
       </CardFooter>

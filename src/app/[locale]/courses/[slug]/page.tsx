@@ -133,7 +133,7 @@ export default async function CoursePage({ params }: Props) {
               {t("accessNote")}
             </CardContent>
             <CardFooter>
-              <Button className="w-full" render={<Link href="/login" />}>
+              <Button className="w-full" nativeButton={false} render={<Link href="/login" />}>
                 {t("enroll")}
               </Button>
             </CardFooter>
