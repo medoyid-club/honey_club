@@ -6,7 +6,7 @@ import { notFound } from "next/navigation";
 import "../globals.css";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
-import { ThemeProvider } from "@/components/theme-provider";
+import { ThemeProvider } from "@wrksz/themes/next";
 import { routing } from "@/i18n/routing";
 
 const geistSans = Geist({
