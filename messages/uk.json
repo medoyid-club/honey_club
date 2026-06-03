@@ -4,7 +4,39 @@
     "about": "Про проєкт",
     "authors": "Автори",
     "login": "Увійти",
-    "start": "Почати навчання"
+    "start": "Почати навчання",
+    "account": "Особистий кабінет"
+  },
+  "Account": {
+    "overviewTitle": "Огляд",
+    "overviewSubtitle": "Ласкаво просимо, {name}",
+    "coursesTitle": "Мої курси",
+    "coursesSubtitle": "Курси, на які ви записані",
+    "settingsTitle": "Налаштування",
+    "settingsSubtitle": "Профіль і параметри акаунта",
+    "logout": "Вийти",
+    "statsCourses": "Мої курси",
+    "statsProfile": "Профіль",
+    "statsProfileHint": "Редагування профілю незабаром",
+    "recentCourses": "Нещодавні курси",
+    "viewAll": "Усі курси →",
+    "noCoursesTitle": "Поки немає курсів",
+    "noCoursesDesc": "Запишіться на курс з каталогу, щоб почати навчання",
+    "browseCourses": "Переглянути каталог",
+    "enrolled": "Записано",
+    "profileSection": "Профіль",
+    "profileSectionDesc": "Основна інформація вашого акаунта",
+    "avatarHint": "Аватар і ім'я можна буде змінити пізніше",
+    "fieldEmail": "Email",
+    "fieldName": "Ім'я",
+    "fieldUsername": "Username",
+    "fieldLocale": "Мова",
+    "settingsComingSoon": "Редагування профілю, сповіщення та безпека — у наступних оновленнях.",
+    "nav": {
+      "overview": "Огляд",
+      "myCourses": "Мої курси",
+      "settings": "Налаштування"
+    }
   },
   "Theme": {
     "toggle": "Перемкнути тему",

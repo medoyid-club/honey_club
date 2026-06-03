@@ -4,7 +4,39 @@
     "about": "About",
     "authors": "Authors",
     "login": "Sign in",
-    "start": "Get started"
+    "start": "Get started",
+    "account": "Account"
+  },
+  "Account": {
+    "overviewTitle": "Overview",
+    "overviewSubtitle": "Welcome, {name}",
+    "coursesTitle": "My courses",
+    "coursesSubtitle": "Courses you are enrolled in",
+    "settingsTitle": "Settings",
+    "settingsSubtitle": "Profile and account preferences",
+    "logout": "Sign out",
+    "statsCourses": "My courses",
+    "statsProfile": "Profile",
+    "statsProfileHint": "Profile editing coming soon",
+    "recentCourses": "Recent courses",
+    "viewAll": "All courses →",
+    "noCoursesTitle": "No courses yet",
+    "noCoursesDesc": "Enroll in a course from the catalog to start learning",
+    "browseCourses": "Browse catalog",
+    "enrolled": "Enrolled",
+    "profileSection": "Profile",
+    "profileSectionDesc": "Basic information about your account",
+    "avatarHint": "Avatar and display name editing coming soon",
+    "fieldEmail": "Email",
+    "fieldName": "Name",
+    "fieldUsername": "Username",
+    "fieldLocale": "Language",
+    "settingsComingSoon": "Profile editing, notifications, and security — coming in future updates.",
+    "nav": {
+      "overview": "Overview",
+      "myCourses": "My courses",
+      "settings": "Settings"
+    }
   },
   "Theme": {
     "toggle": "Toggle theme",

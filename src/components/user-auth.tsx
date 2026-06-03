@@ -1,7 +1,9 @@
 import { getTranslations } from "next-intl/server";
 
+import { UserAvatar } from "@/components/account/user-avatar";
 import { Button } from "@/components/ui/button";
 import { Link } from "@/i18n/navigation";
+import { displayName, getUserProfile } from "@/lib/account";
 import { createClient } from "@/lib/supabase/server";
 
 export async function UserAuth() {
@@ -10,20 +12,24 @@ export async function UserAuth() {
   const user = data?.claims ?? null;
 
   const tNav = await getTranslations("Nav");
-  const tLogin = await getTranslations("Login");
 
   if (user) {
+    const profile = await getUserProfile(
+      user.sub as string,
+      (user.email as string | undefined) ?? ""
+    );
+
     return (
-      <form action="/auth/signout" method="post">
-        <Button
-          type="submit"
-          variant="ghost"
-          size="sm"
-          className="hidden sm:inline-flex"
-        >
-          {tLogin("logout")}
-        </Button>
-      </form>
+      <Button
+        variant="ghost"
+        size="sm"
+        nativeButton={false}
+        className="hidden gap-2 sm:inline-flex"
+        render={<Link href="/account" />}
+      >
+        <UserAvatar profile={profile} size="sm" />
+        <span className="max-w-24 truncate">{displayName(profile)}</span>
+      </Button>
     );
   }
 

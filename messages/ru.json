@@ -4,7 +4,39 @@
     "about": "О проекте",
     "authors": "Авторы",
     "login": "Войти",
-    "start": "Начать учиться"
+    "start": "Начать учиться",
+    "account": "Личный кабинет"
+  },
+  "Account": {
+    "overviewTitle": "Обзор",
+    "overviewSubtitle": "Добро пожаловать, {name}",
+    "coursesTitle": "Мои курсы",
+    "coursesSubtitle": "Курсы, на которые вы записаны",
+    "settingsTitle": "Настройки",
+    "settingsSubtitle": "Профиль и параметры аккаунта",
+    "logout": "Выйти",
+    "statsCourses": "Мои курсы",
+    "statsProfile": "Профиль",
+    "statsProfileHint": "Редактирование профиля скоро",
+    "recentCourses": "Недавние курсы",
+    "viewAll": "Все курсы →",
+    "noCoursesTitle": "Пока нет курсов",
+    "noCoursesDesc": "Запишитесь на курс из каталога, чтобы начать обучение",
+    "browseCourses": "Смотреть каталог",
+    "enrolled": "Записан",
+    "profileSection": "Профиль",
+    "profileSectionDesc": "Основная информация вашего аккаунта",
+    "avatarHint": "Аватар и имя можно будет изменить позже",
+    "fieldEmail": "Email",
+    "fieldName": "Имя",
+    "fieldUsername": "Username",
+    "fieldLocale": "Язык",
+    "settingsComingSoon": "Редактирование профиля, уведомления и безопасность — в следующих обновлениях.",
+    "nav": {
+      "overview": "Обзор",
+      "myCourses": "Мои курсы",
+      "settings": "Настройки"
+    }
   },
   "Theme": {
     "toggle": "Переключить тему",
