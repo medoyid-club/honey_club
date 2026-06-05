@@ -153,11 +153,14 @@ export function localizedCourse(course: DbCourse, locale: Locale): Course {
   };
 }
 
-export function formatPrice(priceUsd: number): string {
-  if (priceUsd === 0) return "";
-  return new Intl.NumberFormat("en-US", {
+// Amounts are stored as integer minor units (cents). Base currency is EUR.
+// Note: the underlying DB columns are still named *_usd for historical reasons,
+// but values represent EUR cents.
+export function formatPrice(priceCents: number): string {
+  if (priceCents === 0) return "";
+  return new Intl.NumberFormat("de-DE", {
     style: "currency",
-    currency: "USD",
+    currency: "EUR",
     maximumFractionDigits: 0,
-  }).format(priceUsd / 100);
+  }).format(priceCents / 100);
 }

@@ -11,6 +11,9 @@
     },
     "resend": {
       "enabled": true
+    },
+    "revolut-x": {
+      "enabled": true
     }
   }
 }
