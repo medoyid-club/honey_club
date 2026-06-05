@@ -66,8 +66,12 @@ export async function inviteAuthor(formData: FormData) {
   try {
     const { error } = await sendEmail({ to: email, subject, html });
     emailSent = !error;
-  } catch {
+    if (error) {
+      console.error("[inviteAuthor] Resend returned error:", error);
+    }
+  } catch (e) {
     emailSent = false;
+    console.error("[inviteAuthor] sendEmail threw:", e);
   }
 
   revalidatePath(`/${locale}/admin`);
