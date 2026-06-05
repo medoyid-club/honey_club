@@ -37,18 +37,20 @@ export default async function Home({ params }: Props) {
 
   return (
     <>
-      <section className="mx-auto w-full max-w-6xl px-4 py-20 sm:py-28">
+      <section className="honey-hero-bg mx-auto w-full max-w-6xl px-4 py-20 sm:py-28">
         <div className="flex flex-col items-center gap-6 text-center">
-          <Badge variant="secondary">{t("badge")}</Badge>
+          <Badge className="border-primary/30 bg-primary/10 text-primary hover:bg-primary/15">
+            {t("badge")}
+          </Badge>
           <h1 className="max-w-3xl font-heading text-4xl font-semibold leading-tight tracking-tight sm:text-5xl">
             {t("title")}
           </h1>
           <p className="max-w-2xl text-lg text-muted-foreground">{t("subtitle")}</p>
           <div className="flex flex-col gap-3 sm:flex-row">
-            <Button size="lg" nativeButton={false} render={<Link href="/courses" />}>
+            <Button size="lg" className="honey-glow" nativeButton={false} render={<Link href="/courses" />}>
               {t("ctaCourses")}
             </Button>
-            <Button size="lg" variant="outline" nativeButton={false} render={<Link href="/#about" />}>
+            <Button size="lg" variant="outline" className="border-primary/25 hover:bg-primary/5 hover:text-primary" nativeButton={false} render={<Link href="/#about" />}>
               {t("ctaAbout")}
             </Button>
           </div>

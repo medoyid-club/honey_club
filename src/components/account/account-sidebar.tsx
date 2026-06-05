@@ -17,7 +17,7 @@ export async function AccountSidebar({ profile, locale }: Props) {
 
   return (
     <aside className="w-full shrink-0 lg:w-60">
-      <div className="sticky top-24 space-y-6 rounded-xl border border-foreground/10 bg-card p-4">
+      <div className="sticky top-24 space-y-6 rounded-xl border border-primary/15 bg-card p-4 shadow-sm">
         <div className="flex items-center gap-3 border-b border-foreground/10 pb-4">
           <UserAvatar profile={profile} size="lg" />
           <div className="min-w-0">

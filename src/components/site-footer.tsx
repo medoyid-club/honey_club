@@ -1,5 +1,6 @@
 import { useTranslations } from "next-intl";
 
+import { SiteLogo } from "@/components/site-logo";
 import { Link } from "@/i18n/navigation";
 
 export function SiteFooter() {
@@ -11,7 +12,7 @@ export function SiteFooter() {
       links: [
         { href: "/courses", label: t("linkCourses") },
         { href: "/#about", label: t("linkAbout") },
-        { href: "/#authors", label: t("linkAuthors") },
+        { href: "/authors", label: t("linkAuthors") },
       ],
     },
     {
@@ -34,10 +35,7 @@ export function SiteFooter() {
     <footer className="border-t border-foreground/10 bg-muted/30">
       <div className="mx-auto grid w-full max-w-6xl gap-8 px-4 py-12 sm:grid-cols-2 lg:grid-cols-4">
         <div className="space-y-3">
-          <Link href="/" className="flex items-center gap-2 font-heading text-lg font-semibold">
-            <span aria-hidden className="text-xl">🍯</span>
-            Honey&nbsp;Club
-          </Link>
+          <SiteLogo showTagline />
           <p className="text-sm text-muted-foreground">{t("tagline")}</p>
         </div>
 
@@ -47,7 +45,7 @@ export function SiteFooter() {
             <ul className="space-y-2 text-sm text-muted-foreground">
               {column.links.map((link) => (
                 <li key={link.href}>
-                  <Link href={link.href} className="transition-colors hover:text-foreground">
+                  <Link href={link.href} className="transition-colors hover:text-primary">
                     {link.label}
                   </Link>
                 </li>

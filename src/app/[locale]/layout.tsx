@@ -19,13 +19,16 @@ const geistMono = Geist_Mono({
   subsets: ["latin", "cyrillic"],
 });
 
+const siteUrl = process.env.NEXT_PUBLIC_BASE_URL ?? "http://localhost:3000";
+
 export const metadata: Metadata = {
+  metadataBase: new URL(siteUrl),
   title: {
-    default: "Honey Club",
-    template: "%s · Honey Club",
+    default: "Клуб медоедов",
+    template: "%s · Клуб медоедов",
   },
   description:
-    "Онлайн-курсы, лекции и семинары для развития личности. Скоро — социальная RPG-среда с картой мира и квестами.",
+    "Школа развития и личностного роста. Онлайн-курсы, лекции и семинары. Скоро — социальная RPG-среда с картой мира и квестами.",
 };
 
 export function generateStaticParams() {

@@ -24,6 +24,8 @@ next-env.d.ts
 .env.development
 .env.production
 *.pem
+# Google OAuth client secret downloads
+client_secret_*.json
 
 # Logs
 npm-debug.log*
@@ -47,3 +49,6 @@ Thumbs.db
 .branches
 .temp
 supabase/.temp/
+
+# Project drafts (images, exports, etc.)
+temp/

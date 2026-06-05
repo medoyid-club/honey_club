@@ -30,7 +30,7 @@ export function CourseCard({ course }: { course: Course }) {
   const price = course.priceUsd === 0 ? t("free") : formatPrice(course.priceUsd);
 
   return (
-    <Card className="h-full transition-shadow hover:ring-foreground/20">
+    <Card className="h-full transition-all hover:border-primary/30 hover:shadow-md hover:shadow-primary/5">
       <CardHeader>
         <div className="flex items-center gap-2">
           <Badge variant="secondary">{formatLabels[course.format]}</Badge>
@@ -52,7 +52,7 @@ export function CourseCard({ course }: { course: Course }) {
       </CardContent>
 
       <CardFooter className="justify-between">
-        <span className="font-heading text-base font-semibold text-foreground">
+        <span className="font-heading text-base font-semibold text-primary">
           {price}
         </span>
         <Button size="sm" nativeButton={false} render={<Link href={`/courses/${course.slug}`} />}>

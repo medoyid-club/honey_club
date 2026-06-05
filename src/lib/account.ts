@@ -2,6 +2,8 @@ import type { Locale } from "@/i18n/routing";
 import { localizedCourse, type Course, type DbCourse } from "@/lib/courses";
 import { createClient } from "@/lib/supabase/server";
 
+export type UserRole = "user" | "author" | "admin";
+
 export type UserProfile = {
   id: string;
   email: string;
@@ -9,6 +11,7 @@ export type UserProfile = {
   fullName: string | null;
   avatarUrl: string | null;
   locale: string;
+  role: UserRole;
 };
 
 export type EnrolledCourse = Course & {
@@ -38,7 +41,7 @@ export async function getUserProfile(userId: string, email: string): Promise<Use
   const supabase = await createClient();
   const { data } = await supabase
     .from("profiles")
-    .select("id, username, full_name, avatar_url, locale")
+    .select("id, username, full_name, avatar_url, locale, role")
     .eq("id", userId)
     .maybeSingle();
 
@@ -49,6 +52,7 @@ export async function getUserProfile(userId: string, email: string): Promise<Use
     fullName: data?.full_name ?? null,
     avatarUrl: data?.avatar_url ?? null,
     locale: data?.locale ?? "ru",
+    role: (data?.role as UserRole) ?? "user",
   };
 }
 

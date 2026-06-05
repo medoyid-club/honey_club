@@ -25,10 +25,27 @@ export async function POST(request: NextRequest) {
 
     if (session.payment_status === "paid") {
       const supabase = createServiceClient();
-      await supabase
+      const meta = session.metadata ?? {};
+
+      const { data: updated } = await supabase
         .from("enrollments")
-        .update({ payment_status: "paid" })
-        .eq("stripe_session_id", session.id);
+        .update({ payment_status: "paid", paid_at: new Date().toISOString() })
+        .eq("stripe_session_id", session.id)
+        .select("id");
+
+      // Fallback: pending row missing — reconstruct from metadata.
+      if ((!updated || updated.length === 0) && meta.user_id && meta.course_id) {
+        await supabase.from("enrollments").insert({
+          user_id: meta.user_id,
+          course_id: meta.course_id,
+          module_id: meta.scope === "module" ? meta.module_id || null : null,
+          scope: meta.scope === "module" ? "module" : "course",
+          pricing_mode: meta.pricing_mode || null,
+          payment_status: "paid",
+          stripe_session_id: session.id,
+          paid_at: new Date().toISOString(),
+        });
+      }
     }
   }
 

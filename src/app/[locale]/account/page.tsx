@@ -54,7 +54,7 @@ export default async function AccountOverviewPage({ params }: Props) {
         <Card>
           <CardHeader className="pb-2">
             <CardDescription>{t("statsCourses")}</CardDescription>
-            <CardTitle className="font-heading text-3xl">{enrollments.length}</CardTitle>
+            <CardTitle className="font-heading text-3xl text-primary">{enrollments.length}</CardTitle>
           </CardHeader>
         </Card>
         <Card>
@@ -102,13 +102,13 @@ export default async function AccountOverviewPage({ params }: Props) {
               <Link
                 key={course.id}
                 href={`/courses/${course.slug}`}
-                className="flex items-center justify-between gap-4 rounded-xl border border-foreground/10 bg-card px-4 py-3 transition-colors hover:bg-muted/50"
+                className="flex items-center justify-between gap-4 rounded-xl border border-foreground/10 bg-card px-4 py-3 transition-colors hover:border-primary/25 hover:bg-primary/5"
               >
                 <div className="min-w-0">
                   <p className="truncate font-medium">{course.title}</p>
                   <p className="truncate text-sm text-muted-foreground">{course.summary}</p>
                 </div>
-                <span className="shrink-0 text-xs text-muted-foreground">
+                <span className="shrink-0 rounded-full bg-primary/10 px-2 py-0.5 text-xs font-medium text-primary">
                   {t("enrolled")}
                 </span>
               </Link>

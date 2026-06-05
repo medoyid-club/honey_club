@@ -5,7 +5,13 @@
     "authors": "Authors",
     "login": "Sign in",
     "start": "Get started",
-    "account": "Account"
+    "account": "Account",
+    "studio": "Studio",
+    "admin": "Admin"
+  },
+  "Brand": {
+    "name": "Medoyid Club",
+    "tagline": "School of personal growth and development"
   },
   "Account": {
     "overviewTitle": "Overview",
@@ -49,7 +55,7 @@
   },
   "Home": {
     "badge": "Learning + game",
-    "title": "Learn, grow and find your people at Honey Club",
+    "title": "Learn, grow and find your people at Medoyid Club",
     "subtitle": "Online courses, lectures and seminars for personal growth. Next stage — a social RPG environment with a world map, quests and matching by interests and personality type.",
     "ctaCourses": "Browse courses",
     "ctaAbout": "About",
@@ -87,10 +93,39 @@
     "formatSeminar": "Seminar",
     "levelBeginner": "Beginner",
     "levelIntermediate": "Intermediate",
-    "levelAdvanced": "Advanced"
+    "levelAdvanced": "Advanced",
+    "curriculum": "Curriculum",
+    "week": "Week",
+    "day": "Day",
+    "min": "min",
+    "noLessons": "Lessons coming soon.",
+    "notSellable": "Coming soon",
+    "notSellableHint": "This course is still being prepared. Check back later.",
+    "buyCourse": "Buy full course",
+    "buyByModule": "Or buy by module",
+    "owned": "Unlocked",
+    "statusLabel": "Status",
+    "priceOnlineLabel": "Live cohort (online sessions)",
+    "priceOfflineLabel": "Recording (self-paced)",
+    "watchVideo": "Watch video →",
+    "noContent": "Materials for this lesson are coming soon.",
+    "lockedTitle": "No access",
+    "lockedText": "To unlock this lesson, buy the course or the corresponding module.",
+    "status": {
+      "draft": "Draft",
+      "upcoming": "Upcoming",
+      "live": "Live now",
+      "completed": "Completed",
+      "archived": "Archived"
+    },
+    "lessonTypes": {
+      "lecture": "Lecture",
+      "practice": "Practice",
+      "seminar": "Seminar"
+    }
   },
   "Login": {
-    "title": "Sign in to Honey Club",
+    "title": "Sign in to Medoyid Club",
     "description": "Sign in or create an account to start learning.",
     "loginTab": "Sign in",
     "registerTab": "Register",
@@ -98,6 +133,8 @@
     "password": "Password",
     "loginBtn": "Sign in",
     "registerBtn": "Create account",
+    "googleBtn": "Continue with Google",
+    "orDivider": "or",
     "logout": "Sign out"
   },
   "Footer": {
@@ -112,6 +149,212 @@
     "linkContacts": "Contacts",
     "linkPrivacy": "Privacy",
     "linkTerms": "Terms of Service",
-    "rights": "© {year} Honey Club. All rights reserved."
+    "rights": "© {year} Medoyid Club. All rights reserved."
+  },
+  "Authors": {
+    "title": "Authors",
+    "subtitle": "Medoyid Club instructors and experts — their courses, articles, and videos."
+  },
+  "Author": {
+    "nav": {
+      "label": "Author sections",
+      "blog": "Blog",
+      "courses": "Courses",
+      "videos": "Videos",
+      "about": "About"
+    },
+    "blog": {
+      "title": "Blog",
+      "subtitle": "Articles and notes by the author.",
+      "read": "Article",
+      "minutes": "min",
+      "comingSoon": "The full article will be published soon. For now, browse previews and stay tuned for updates."
+    },
+    "courses": {
+      "title": "Author's courses",
+      "subtitle": "Programs and seminars on Medoyid Club.",
+      "emptyTitle": "Courses coming soon",
+      "emptyDesc": "We're preparing this author's programs — check back later or browse the catalog."
+    },
+    "videos": {
+      "title": "Video library",
+      "subtitle": "A curated selection from the author's YouTube channel by topic.",
+      "channelHint": "The full feed is on the author's YouTube channel.",
+      "openChannel": "Open channel",
+      "watch": "Watch",
+      "categories": {
+        "all": "All",
+        "philosophy": "Philosophy",
+        "psychology": "Psychology",
+        "society": "Society"
+      }
+    },
+    "about": {
+      "title": "About the author",
+      "subtitle": "A short introduction to the person behind the content.",
+      "moreSoon": "Extended bio, achievements, and media — in upcoming updates.",
+      "location": "Location"
+    }
+  },
+  "Studio": {
+    "title": "Studio",
+    "statusPublished": "Published",
+    "statusDraft": "Draft",
+    "viewPublic": "Open public page",
+    "overviewTitle": "Overview",
+    "overviewSubtitle": "Manage your profile, courses, blog, and videos.",
+    "publishHint": "Your page is not published yet. Fill in your profile and publish it.",
+    "goToProfile": "Go to profile",
+    "nav": {
+      "overview": "Overview",
+      "profile": "Profile",
+      "courses": "Courses",
+      "blog": "Blog",
+      "videos": "Videos"
+    },
+    "profileForm": {
+      "title": "Author profile",
+      "subtitle": "Cover, name, slogan, bio, socials, and contacts.",
+      "publish": "Publish",
+      "unpublish": "Unpublish",
+      "saved": "Saved",
+      "basics": "Basics",
+      "displayName": "Name",
+      "slug": "Page address (slug)",
+      "cover": "Cover",
+      "avatar": "Photo",
+      "headline": "Role / specialization",
+      "slogan": "Slogan",
+      "bio": "About you",
+      "socials": "Socials",
+      "contacts": "Contacts",
+      "contactEmail": "Contact email",
+      "contactLocation": "Location",
+      "save": "Save"
+    },
+    "courses": {
+      "title": "Courses",
+      "subtitle": "Create and edit courses, modules, and lessons.",
+      "newPlaceholder": "New course title",
+      "create": "Create course",
+      "empty": "No courses yet.",
+      "lessonsShort": "lessons",
+      "live": "Published"
+    },
+    "courseEditor": {
+      "back": "← Back to courses",
+      "viewPublic": "Open on site",
+      "saved": "Saved",
+      "metaTitle": "About course",
+      "name": "Title",
+      "summary": "Short summary",
+      "description": "Full description",
+      "status": "Status",
+      "format": "Format",
+      "level": "Level",
+      "priceOnline": "Online price (USD cents)",
+      "priceOffline": "Recording price (USD cents)",
+      "tags": "Tags (comma-separated)",
+      "priceHint": "Active price is chosen by status: upcoming/live — online, completed/archived — recording.",
+      "published": "Published (visible on site)",
+      "saveCourse": "Save course",
+      "modulesTitle": "Modules and lessons",
+      "week": "Week",
+      "editModule": "Edit module",
+      "position": "Position",
+      "saveModule": "Save module",
+      "deleteModule": "Delete module",
+      "day": "Day",
+      "type": "Type",
+      "min": "min",
+      "durationMin": "Duration (min)",
+      "videoUrl": "Video URL",
+      "content": "Content",
+      "markdownHint": "Markdown supported.",
+      "saveLesson": "Save lesson",
+      "deleteLesson": "Delete lesson",
+      "newLesson": "Lesson title",
+      "addLesson": "Add lesson",
+      "newModule": "Module title",
+      "addModule": "Add module",
+      "deleteCourse": "Delete course"
+    },
+    "blog": {
+      "title": "Blog",
+      "subtitle": "Create articles in three languages.",
+      "newPlaceholder": "New article title",
+      "create": "Create article",
+      "empty": "No articles yet.",
+      "published": "Published",
+      "draft": "Draft",
+      "back": "← Back to blog",
+      "saved": "Saved",
+      "editorTitle": "Article",
+      "slug": "Address (slug)",
+      "readingMinutes": "Reading time (min)",
+      "excerpt": "Excerpt",
+      "content": "Content",
+      "markdownHint": "Markdown supported.",
+      "publish": "Publish",
+      "save": "Save",
+      "delete": "Delete article"
+    },
+    "videos": {
+      "title": "Video library",
+      "subtitle": "Categories and videos from YouTube.",
+      "categoriesTitle": "Categories",
+      "save": "Save",
+      "delete": "Delete",
+      "newCategory": "New category",
+      "addCategory": "Add category",
+      "videosTitle": "Videos",
+      "youtubeId": "YouTube ID or URL",
+      "category": "Category",
+      "newVideoTitle": "Video title",
+      "addVideo": "Add video"
+    }
+  },
+  "Admin": {
+    "title": "Administration",
+    "subtitle": "Users, roles, and author invites.",
+    "inviteSent": "Invite sent to {email}.",
+    "inviteCreated": "Invite created for {email} (email not sent).",
+    "inviteLink": "Acceptance link",
+    "roleUpdated": "Role updated.",
+    "inviteTitle": "Invite an author",
+    "invitePlaceholder": "email@example.com",
+    "inviteButton": "Invite",
+    "inviteHint": "The author receives an email with a link. Until the domain is verified, emails only arrive at your own inbox.",
+    "invitesTitle": "Invites",
+    "inviteStatus": {
+      "pending": "Pending",
+      "accepted": "Accepted",
+      "expired": "Expired"
+    },
+    "revoke": "Revoke",
+    "usersTitle": "Users",
+    "roles": {
+      "user": "Student",
+      "author": "Author",
+      "admin": "Admin"
+    },
+    "apply": "Apply"
+  },
+  "AuthorInvite": {
+    "title": "Become an author",
+    "intro": "You have been invited to join Medoyid Club as an author.",
+    "benefits": "Create courses, run a blog and a video library, and design your own page.",
+    "accept": "Accept invite",
+    "invalidTitle": "Invalid invite",
+    "invalidText": "The link is invalid. Ask an admin to send a new invite.",
+    "expiredText": "The invite has expired. Ask for a new one.",
+    "loginTitle": "Sign in required",
+    "loginText": "Sign in or register with the same email the invite was sent to.",
+    "loginButton": "Sign in",
+    "acceptedTitle": "Already accepted",
+    "acceptedText": "This invite has already been used.",
+    "toStudio": "Go to studio",
+    "mismatchTitle": "Different email",
+    "mismatchText": "The invite was sent to {email}. Sign in with that address."
   }
 }

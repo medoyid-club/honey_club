@@ -19,17 +19,43 @@ export async function UserAuth() {
       (user.email as string | undefined) ?? ""
     );
 
+    const isCreator = profile.role === "author" || profile.role === "admin";
+
     return (
-      <Button
-        variant="ghost"
-        size="sm"
-        nativeButton={false}
-        className="hidden gap-2 sm:inline-flex"
-        render={<Link href="/account" />}
-      >
-        <UserAvatar profile={profile} size="sm" />
-        <span className="max-w-24 truncate">{displayName(profile)}</span>
-      </Button>
+      <div className="flex items-center gap-1">
+        {profile.role === "admin" && (
+          <Button
+            variant="ghost"
+            size="sm"
+            nativeButton={false}
+            className="hidden sm:inline-flex"
+            render={<Link href="/admin" />}
+          >
+            {tNav("admin")}
+          </Button>
+        )}
+        {isCreator && (
+          <Button
+            variant="ghost"
+            size="sm"
+            nativeButton={false}
+            className="hidden sm:inline-flex"
+            render={<Link href="/studio" />}
+          >
+            {tNav("studio")}
+          </Button>
+        )}
+        <Button
+          variant="ghost"
+          size="sm"
+          nativeButton={false}
+          className="hidden gap-2 sm:inline-flex"
+          render={<Link href="/account" />}
+        >
+          <UserAvatar profile={profile} size="sm" />
+          <span className="max-w-24 truncate">{displayName(profile)}</span>
+        </Button>
+      </div>
     );
   }
 

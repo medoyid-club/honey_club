@@ -1,5 +1,10 @@
+import { Check } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 
+import {
+  createCheckoutSession,
+  enrollFree,
+} from "@/app/[locale]/courses/[slug]/actions";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -8,67 +13,93 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { enrollFree, createCheckoutSession } from "@/app/[locale]/courses/[slug]/actions";
 import { Link } from "@/i18n/navigation";
-import { formatPrice } from "@/lib/courses";
-import { createClient } from "@/lib/supabase/server";
+import { activePricing, formatPrice, type CourseStatus } from "@/lib/courses";
+
+export type PurchaseModule = {
+  id: string;
+  title: string;
+  priceOnlineUsd: number;
+  priceOfflineUsd: number;
+};
 
 type Props = {
   courseId: string;
-  stripePriceId: string | null;
-  priceUsd: number;
-  locale: string;
   slug: string;
-  sessionId?: string;
+  locale: string;
+  status: CourseStatus;
+  priceOnlineUsd: number;
+  priceOfflineUsd: number;
+  modules: PurchaseModule[];
+  isLoggedIn: boolean;
+  fullCourseAccess: boolean;
+  ownedModuleIds: string[];
+  justPaid?: boolean;
 };
 
 export async function EnrollCard({
   courseId,
-  stripePriceId,
-  priceUsd,
-  locale,
   slug,
-  sessionId,
+  locale,
+  status,
+  priceOnlineUsd,
+  priceOfflineUsd,
+  modules,
+  isLoggedIn,
+  fullCourseAccess,
+  ownedModuleIds,
+  justPaid,
 }: Props) {
   const t = await getTranslations("Course");
 
-  const supabase = await createClient();
-  const { data: claimsData } = await supabase.auth.getClaims();
-  const user = claimsData?.claims ?? null;
+  const pricing = activePricing(status, priceOnlineUsd, priceOfflineUsd);
+  const owned = new Set(ownedModuleIds);
 
-  const isFree = priceUsd === 0;
-  const displayPrice = isFree ? t("free") : formatPrice(priceUsd);
-
-  let isEnrolled = false;
-  if (user) {
-    const { data } = await supabase
-      .from("enrollments")
-      .select("payment_status")
-      .eq("user_id", user.sub)
-      .eq("course_id", courseId)
-      .in("payment_status", ["free", "paid"])
-      .maybeSingle();
-    isEnrolled = !!data;
+  // Not sellable yet (draft).
+  if (!pricing) {
+    return (
+      <Card>
+        <CardHeader>
+          <CardTitle className="font-heading text-xl">{t("notSellable")}</CardTitle>
+        </CardHeader>
+        <CardContent className="text-sm text-muted-foreground">
+          {t("notSellableHint")}
+        </CardContent>
+      </Card>
+    );
   }
 
-  const justPaid = !!sessionId && !isEnrolled;
+  if (fullCourseAccess || justPaid) {
+    return (
+      <Card>
+        <CardHeader>
+          <CardTitle className="font-heading text-xl">{t("alreadyEnrolled")}</CardTitle>
+        </CardHeader>
+        <CardContent className="text-sm text-muted-foreground">
+          {t("accessNoteEnrolled")}
+        </CardContent>
+      </Card>
+    );
+  }
+
+  const courseIsFree = pricing.priceUsd === 0;
+  const coursePriceLabel = courseIsFree ? t("free") : formatPrice(pricing.priceUsd);
+  const modePrice = (m: PurchaseModule) =>
+    pricing.mode === "online" ? m.priceOnlineUsd : m.priceOfflineUsd;
 
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="font-heading text-2xl">{displayPrice}</CardTitle>
+        <CardTitle className="font-heading text-2xl">{coursePriceLabel}</CardTitle>
+        <p className="text-xs text-muted-foreground">
+          {pricing.mode === "online" ? t("priceOnlineLabel") : t("priceOfflineLabel")}
+        </p>
       </CardHeader>
 
-      <CardContent className="text-sm text-muted-foreground">
-        {isEnrolled || justPaid ? t("accessNoteEnrolled") : t("accessNote")}
-      </CardContent>
+      <CardContent className="space-y-4 text-sm text-muted-foreground">
+        <p>{t("accessNote")}</p>
 
-      <CardFooter>
-        {isEnrolled || justPaid ? (
-          <div className="flex w-full items-center justify-center rounded-md bg-emerald-500/10 px-4 py-2 text-sm font-medium text-emerald-700 dark:text-emerald-400">
-            {t("alreadyEnrolled")}
-          </div>
-        ) : !user ? (
+        {!isLoggedIn ? (
           <Button
             className="w-full"
             nativeButton={false}
@@ -76,8 +107,8 @@ export async function EnrollCard({
           >
             {t("loginToEnroll")}
           </Button>
-        ) : isFree ? (
-          <form action={enrollFree} className="w-full">
+        ) : courseIsFree ? (
+          <form action={enrollFree}>
             <input type="hidden" name="courseId" value={courseId} />
             <input type="hidden" name="locale" value={locale} />
             <input type="hidden" name="slug" value={slug} />
@@ -86,16 +117,61 @@ export async function EnrollCard({
             </Button>
           </form>
         ) : (
-          <form action={createCheckoutSession} className="w-full">
+          <form action={createCheckoutSession}>
+            <input type="hidden" name="scope" value="course" />
             <input type="hidden" name="courseId" value={courseId} />
-            <input type="hidden" name="stripePriceId" value={stripePriceId!} />
             <input type="hidden" name="locale" value={locale} />
             <input type="hidden" name="slug" value={slug} />
             <Button type="submit" className="w-full">
-              {t("enroll")} — {displayPrice}
+              {t("buyCourse")} — {coursePriceLabel}
             </Button>
           </form>
         )}
+
+        {modules.length > 0 && !courseIsFree && (
+          <div className="space-y-2 border-t border-foreground/10 pt-3">
+            <p className="text-xs font-medium uppercase tracking-wide text-foreground/70">
+              {t("buyByModule")}
+            </p>
+            {modules.map((m) => {
+              const isOwned = owned.has(m.id);
+              const price = modePrice(m);
+              return (
+                <div
+                  key={m.id}
+                  className="flex items-center justify-between gap-2 text-sm"
+                >
+                  <span className="min-w-0 truncate text-foreground/90">{m.title}</span>
+                  {isOwned ? (
+                    <span className="inline-flex items-center gap-1 text-primary">
+                      <Check className="size-4" />
+                      {t("owned")}
+                    </span>
+                  ) : isLoggedIn ? (
+                    <form action={createCheckoutSession}>
+                      <input type="hidden" name="scope" value="module" />
+                      <input type="hidden" name="courseId" value={courseId} />
+                      <input type="hidden" name="moduleId" value={m.id} />
+                      <input type="hidden" name="locale" value={locale} />
+                      <input type="hidden" name="slug" value={slug} />
+                      <Button type="submit" variant="outline" size="sm">
+                        {price === 0 ? t("free") : formatPrice(price)}
+                      </Button>
+                    </form>
+                  ) : (
+                    <span className="text-muted-foreground">
+                      {price === 0 ? t("free") : formatPrice(price)}
+                    </span>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        )}
+      </CardContent>
+
+      <CardFooter className="text-xs text-muted-foreground">
+        {t("statusLabel")}: {t(`status.${status}` as never)}
       </CardFooter>
     </Card>
   );
