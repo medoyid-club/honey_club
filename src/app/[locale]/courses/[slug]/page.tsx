@@ -3,6 +3,9 @@ import { Lock, PlayCircle } from "lucide-react";
 import { getLocale, getTranslations, setRequestLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
 
+import { CourseOverviewVideo } from "@/components/course-overview-video";
+import { CourseCardAuthor } from "@/components/course-card-author";
+import { CourseScheduleCalendar } from "@/components/course-schedule-calendar";
 import { EnrollCard, type PurchaseModule } from "@/components/enroll-card";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -10,7 +13,12 @@ import { Link } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/routing";
 import { getCourseAccess } from "@/lib/access";
 import { pick } from "@/lib/authors/db";
-import { localizedCourse, type DbCourse, type LessonType } from "@/lib/courses";
+import {
+  hasScheduledLessons,
+  initialCalendarMonth,
+  type ScheduleEvent,
+} from "@/lib/course-schedule";
+import { mapCourse, COURSE_WITH_AUTHOR_SELECT, type DbCourse, type DbCourseRow, type LessonType } from "@/lib/courses";
 import { createClient } from "@/lib/supabase/server";
 import { createPublicClient } from "@/lib/supabase/public";
 
@@ -38,6 +46,7 @@ type OutlineRow = {
   lesson_title_en: string | null;
   lesson_duration_minutes: number | null;
   lesson_has_video: boolean | null;
+  lesson_scheduled_at: string | null;
 };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
@@ -74,14 +83,14 @@ export default async function CoursePage({ params, searchParams }: Props) {
   const publicClient = createPublicClient();
   const { data } = await publicClient
     .from("courses")
-    .select("*")
+    .select(COURSE_WITH_AUTHOR_SELECT)
     .eq("slug", slug)
     .eq("published", true)
     .single();
 
   if (!data) notFound();
-  const dbCourse = data as DbCourse;
-  const course = localizedCourse(dbCourse, activeLocale);
+  const dbCourse = data as DbCourseRow;
+  const course = mapCourse(dbCourse, activeLocale);
 
   const t = await getTranslations("Course");
 
@@ -105,6 +114,7 @@ export default async function CoursePage({ params, searchParams }: Props) {
       title: string;
       durationMinutes: number;
       hasVideo: boolean;
+      scheduledAt: string | null;
     }[];
   };
 
@@ -131,6 +141,7 @@ export default async function CoursePage({ params, searchParams }: Props) {
         title: pick(activeLocale, r.lesson_title_ru, r.lesson_title_uk, r.lesson_title_en),
         durationMinutes: r.lesson_duration_minutes ?? 0,
         hasVideo: !!r.lesson_has_video,
+        scheduledAt: r.lesson_scheduled_at,
       });
     }
   }
@@ -159,6 +170,31 @@ export default async function CoursePage({ params, searchParams }: Props) {
     practice: t("lessonTypes.practice"),
     seminar: t("lessonTypes.seminar"),
   };
+
+  const scheduleEvents: ScheduleEvent[] = modules.flatMap((m) =>
+    m.lessons
+      .filter((l) => l.scheduledAt)
+      .map((l) => ({
+        id: l.id,
+        title: l.title,
+        type: l.type,
+        scheduledAt: l.scheduledAt!,
+        durationMinutes: l.durationMinutes,
+        weekPosition: m.position,
+        dayPosition: l.position,
+      }))
+  );
+
+  const showSchedule =
+    (course.status === "upcoming" || course.status === "live") &&
+    hasScheduledLessons(scheduleEvents);
+
+  const scheduleTimezone =
+    dbCourse.schedule_timezone || "Europe/Kyiv";
+  const calendarMonth = initialCalendarMonth(
+    scheduleEvents,
+    dbCourse.cohort_starts_at
+  );
 
   const purchaseModules: PurchaseModule[] = modules.map((m) => ({
     id: m.id,
@@ -198,10 +234,25 @@ export default async function CoursePage({ params, searchParams }: Props) {
             <p className="text-lg text-muted-foreground">{course.summary}</p>
             {course.description && <p className="text-foreground">{course.description}</p>}
 
-            <dl className="grid grid-cols-2 gap-4 border-t border-foreground/10 pt-6 text-sm sm:grid-cols-3">
+            {course.overviewVideoUrl && (
+              <CourseOverviewVideo
+                src={course.overviewVideoUrl}
+                poster={course.coverUrl}
+                title={course.title}
+              />
+            )}
+
+            <dl className="grid grid-cols-2 gap-4 border-t border-foreground/10 pt-6 text-sm sm:grid-cols-3 lg:grid-cols-4">
               <div>
                 <dt className="text-muted-foreground">{t("author")}</dt>
-                <dd className="font-medium">{course.author}</dd>
+                <dd className="font-medium">
+                  <CourseCardAuthor
+                    name={course.author}
+                    slug={course.authorSlug}
+                    avatarUrl={course.authorAvatarUrl}
+                    label=""
+                  />
+                </dd>
               </div>
               <div>
                 <dt className="text-muted-foreground">{t("lessons")}</dt>
@@ -213,8 +264,31 @@ export default async function CoursePage({ params, searchParams }: Props) {
                   {course.durationHours} {t("hoursShort")}
                 </dd>
               </div>
+              {dbCourse.cohort_starts_at && (
+                <div>
+                  <dt className="text-muted-foreground">{t("schedule.starts")}</dt>
+                  <dd className="font-medium" suppressHydrationWarning>
+                    {new Intl.DateTimeFormat(activeLocale, {
+                      day: "numeric",
+                      month: "long",
+                      year: "numeric",
+                      timeZone: scheduleTimezone,
+                    }).format(new Date(dbCourse.cohort_starts_at))}
+                  </dd>
+                </div>
+              )}
             </dl>
           </div>
+
+          {showSchedule && (
+            <CourseScheduleCalendar
+              events={scheduleEvents}
+              locale={activeLocale}
+              timeZone={scheduleTimezone}
+              initialYear={calendarMonth.year}
+              initialMonth={calendarMonth.month}
+            />
+          )}
 
           {modules.length > 0 && (
             <section className="space-y-4">
@@ -250,7 +324,20 @@ export default async function CoursePage({ params, searchParams }: Props) {
                                 {t("day")} {l.position}: {l.title}
                               </span>
                             </div>
-                            <span className="shrink-0 text-xs text-muted-foreground">
+                            <span
+                              className="shrink-0 text-xs text-muted-foreground"
+                              suppressHydrationWarning
+                            >
+                              {l.scheduledAt
+                                ? new Intl.DateTimeFormat(activeLocale, {
+                                    day: "numeric",
+                                    month: "short",
+                                    hour: "2-digit",
+                                    minute: "2-digit",
+                                    timeZone: scheduleTimezone,
+                                  }).format(new Date(l.scheduledAt))
+                                : null}
+                              {l.scheduledAt ? " · " : ""}
                               {typeLabels[l.type]} · {l.durationMinutes} {t("min")}
                             </span>
                           </div>

@@ -5,6 +5,7 @@ import {
   deleteBlogPost,
   updateBlogPost,
 } from "@/app/[locale]/studio/blog/actions";
+import { TranslateEmptyFieldsButton } from "@/components/studio/translate-empty-fields-button";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Link } from "@/i18n/navigation";
@@ -57,13 +58,18 @@ export default async function StudioBlogEditorPage({
         </div>
       )}
 
-      <form action={updateBlogPost} className="space-y-6">
+      <form id="studio-blog-form" action={updateBlogPost} className="space-y-6">
         <input type="hidden" name="locale" value={locale} />
         <input type="hidden" name="postId" value={post.id} />
 
         <Card>
-          <CardHeader>
+          <CardHeader className="flex flex-row items-start justify-between gap-3 space-y-0">
             <CardTitle>{t("editorTitle")}</CardTitle>
+            <TranslateEmptyFieldsButton
+              formId="studio-blog-form"
+              fieldBases={["title", "excerpt", "content"]}
+              locale={locale}
+            />
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="grid gap-4 sm:grid-cols-2">

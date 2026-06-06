@@ -4,7 +4,7 @@ import { notFound } from "next/navigation";
 import { CourseCard } from "@/components/course-card";
 import type { Locale } from "@/i18n/routing";
 import { getPublishedAuthorPageBySlug } from "@/lib/authors/db";
-import { localizedCourse, type DbCourse } from "@/lib/courses";
+import { COURSE_WITH_AUTHOR_SELECT, mapCourse, type DbCourseRow } from "@/lib/courses";
 import { createPublicClient } from "@/lib/supabase/public";
 
 type Props = { params: Promise<{ locale: string; slug: string }> };
@@ -21,13 +21,13 @@ export default async function AuthorCoursesPage({ params }: Props) {
   const supabase = createPublicClient();
   const { data: rows } = await supabase
     .from("courses")
-    .select("*")
+    .select(COURSE_WITH_AUTHOR_SELECT)
     .eq("published", true)
     .eq("author_page_id", page.id)
     .order("created_at");
 
-  const courses = ((rows as DbCourse[]) ?? []).map((c) =>
-    localizedCourse(c, locale as Locale)
+  const courses = ((rows as DbCourseRow[]) ?? []).map((c) =>
+    mapCourse(c, locale as Locale)
   );
 
   return (

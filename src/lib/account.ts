@@ -1,5 +1,5 @@
 import type { Locale } from "@/i18n/routing";
-import { localizedCourse, type Course, type DbCourse } from "@/lib/courses";
+import { mapCourse, type Course, type DbCourseRow } from "@/lib/courses";
 import { createClient } from "@/lib/supabase/server";
 
 export type UserRole = "user" | "author" | "admin";
@@ -81,7 +81,9 @@ export async function getUserEnrollments(
   const supabase = await createClient();
   const { data } = await supabase
     .from("enrollments")
-    .select("created_at, payment_status, courses(*)")
+    .select(
+      "created_at, payment_status, courses(*, author_pages(slug, avatar_url, display_name))"
+    )
     .eq("user_id", userId)
     .in("payment_status", ["free", "paid"])
     .order("created_at", { ascending: false });
@@ -91,7 +93,7 @@ export async function getUserEnrollments(
   return data
     .filter((row) => row.courses && !Array.isArray(row.courses))
     .map((row) => {
-      const course = localizedCourse(row.courses as unknown as DbCourse, locale);
+      const course = mapCourse(row.courses as unknown as DbCourseRow, locale);
       return {
         ...course,
         enrolledAt: row.created_at as string,

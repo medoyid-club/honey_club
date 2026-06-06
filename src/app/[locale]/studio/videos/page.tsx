@@ -8,6 +8,7 @@ import {
   updateCategory,
   updateVideo,
 } from "@/app/[locale]/studio/videos/actions";
+import { TranslateEmptyFieldsButton } from "@/components/studio/translate-empty-fields-button";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import type { VideoCategoryRow, VideoRow } from "@/lib/authors/db";
@@ -65,9 +66,20 @@ export default async function StudioVideosPage({ params }: Props) {
               <summary className="cursor-pointer text-sm">
                 {c.position}. {c.name_ru}
               </summary>
-              <form action={updateCategory} className="mt-3 space-y-3">
+              <form
+                id={`studio-category-${c.id}`}
+                action={updateCategory}
+                className="mt-3 space-y-3"
+              >
                 <input type="hidden" name="locale" value={locale} />
                 <input type="hidden" name="categoryId" value={c.id} />
+                <div className="flex justify-end">
+                  <TranslateEmptyFieldsButton
+                    formId={`studio-category-${c.id}`}
+                    fieldBases={["name"]}
+                    locale={locale}
+                  />
+                </div>
                 <div className="grid gap-3 sm:grid-cols-5">
                   <Field name="position" label="#" value={String(c.position)} type="number" />
                   <Field name="name_ru" label="RU" value={c.name_ru} />
@@ -115,9 +127,20 @@ export default async function StudioVideosPage({ params }: Props) {
                   ({categoryName(v.category_id)})
                 </span>
               </summary>
-              <form action={updateVideo} className="mt-3 space-y-3">
+              <form
+                id={`studio-video-${v.id}`}
+                action={updateVideo}
+                className="mt-3 space-y-3"
+              >
                 <input type="hidden" name="locale" value={locale} />
                 <input type="hidden" name="videoId" value={v.id} />
+                <div className="flex justify-end">
+                  <TranslateEmptyFieldsButton
+                    formId={`studio-video-${v.id}`}
+                    fieldBases={["title"]}
+                    locale={locale}
+                  />
+                </div>
                 <div className="grid gap-3 sm:grid-cols-3">
                   <Field name="position" label="#" value={String(v.position)} type="number" />
                   <Field name="youtube_id" label={t("youtubeId")} value={v.youtube_id} />

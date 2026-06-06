@@ -1,5 +1,9 @@
+"use client";
+
+import Image from "next/image";
 import { useTranslations } from "next-intl";
 
+import { CourseCardAuthor } from "@/components/course-card-author";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -13,7 +17,12 @@ import {
 import { Link } from "@/i18n/navigation";
 import { formatPrice, type Course } from "@/lib/courses";
 
-export function CourseCard({ course }: { course: Course }) {
+type Props = {
+  course: Course;
+  variant?: "featured" | "compact";
+};
+
+export function CourseCard({ course, variant = "featured" }: Props) {
   const t = useTranslations("Course");
 
   const formatLabels = {
@@ -28,14 +37,81 @@ export function CourseCard({ course }: { course: Course }) {
   };
 
   const price = course.priceUsd === 0 ? t("free") : formatPrice(course.priceUsd);
+  const coverBadgeClass =
+    "border-border bg-card text-card-foreground shadow-md";
+  const badges = (
+    <>
+      <Badge variant="secondary">{formatLabels[course.format]}</Badge>
+      <Badge variant="outline">{levelLabels[course.level]}</Badge>
+    </>
+  );
+  const coverBadges = (
+    <>
+      <Badge variant="secondary" className={coverBadgeClass}>
+        {formatLabels[course.format]}
+      </Badge>
+      <Badge variant="outline" className={coverBadgeClass}>
+        {levelLabels[course.level]}
+      </Badge>
+    </>
+  );
+
+  if (variant === "compact") {
+    return (
+      <Card className="flex h-full flex-col transition-all hover:border-primary/30 hover:shadow-md hover:shadow-primary/5">
+        <CardHeader>
+          <div className="flex flex-wrap items-center gap-2">{badges}</div>
+          <CardTitle className="text-base leading-snug">
+            <Link href={`/courses/${course.slug}`} className="hover:underline">
+              {course.title}
+            </Link>
+          </CardTitle>
+          <CardDescription>{course.summary}</CardDescription>
+        </CardHeader>
+
+        <CardContent className="space-y-2 text-sm text-muted-foreground">
+          <CourseCardAuthor
+            name={course.author}
+            slug={course.authorSlug}
+            avatarUrl={course.authorAvatarUrl}
+            label={t("author")}
+          />
+          <p>{t("meta", { lessons: course.lessons, hours: course.durationHours })}</p>
+        </CardContent>
+
+        <CardFooter className="mt-auto justify-between">
+          <span className="text-sm font-medium">{price}</span>
+          <Button
+            size="sm"
+            nativeButton={false}
+            render={<Link href={`/courses/${course.slug}`} />}
+          >
+            {t("details")}
+          </Button>
+        </CardFooter>
+      </Card>
+    );
+  }
 
   return (
-    <Card className="h-full transition-all hover:border-primary/30 hover:shadow-md hover:shadow-primary/5">
-      <CardHeader>
-        <div className="flex items-center gap-2">
-          <Badge variant="secondary">{formatLabels[course.format]}</Badge>
-          <Badge variant="outline">{levelLabels[course.level]}</Badge>
-        </div>
+    <Card className="flex h-full flex-col overflow-hidden p-0 transition-all hover:border-primary/30 hover:shadow-md hover:shadow-primary/5">
+      <div className="relative aspect-video w-full bg-primary/5">
+        {course.coverUrl ? (
+          <Image
+            src={course.coverUrl}
+            alt=""
+            fill
+            className="object-cover"
+            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+            unoptimized
+          />
+        ) : (
+          <div className="absolute inset-0 bg-gradient-to-br from-primary/15 via-primary/5 to-transparent" />
+        )}
+        <div className="absolute left-3 top-3 flex flex-wrap gap-2">{coverBadges}</div>
+      </div>
+
+      <CardHeader className="pb-2">
         <CardTitle className="text-lg">
           <Link href={`/courses/${course.slug}`} className="hover:underline">
             {course.title}
@@ -44,18 +120,23 @@ export function CourseCard({ course }: { course: Course }) {
         <CardDescription>{course.summary}</CardDescription>
       </CardHeader>
 
-      <CardContent className="text-sm text-muted-foreground">
-        <p>
-          {t("author")}: {course.author}
-        </p>
+      <CardContent className="space-y-2 text-sm text-muted-foreground">
+        <CourseCardAuthor
+          name={course.author}
+          slug={course.authorSlug}
+          avatarUrl={course.authorAvatarUrl}
+          label={t("author")}
+        />
         <p>{t("meta", { lessons: course.lessons, hours: course.durationHours })}</p>
       </CardContent>
 
-      <CardFooter className="justify-between">
-        <span className="font-heading text-base font-semibold text-primary">
-          {price}
-        </span>
-        <Button size="sm" nativeButton={false} render={<Link href={`/courses/${course.slug}`} />}>
+      <CardFooter className="mt-auto justify-between pb-6">
+        <span className="font-heading text-base font-semibold text-primary">{price}</span>
+        <Button
+          size="sm"
+          nativeButton={false}
+          render={<Link href={`/courses/${course.slug}`} />}
+        >
           {t("details")}
         </Button>
       </CardFooter>

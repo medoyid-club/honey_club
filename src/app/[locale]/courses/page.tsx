@@ -3,7 +3,7 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 
 import { CourseCard } from "@/components/course-card";
 import type { Locale } from "@/i18n/routing";
-import { localizedCourse, type DbCourse } from "@/lib/courses";
+import { COURSE_WITH_AUTHOR_SELECT, mapCourse, type DbCourseRow } from "@/lib/courses";
 import { createPublicClient } from "@/lib/supabase/public";
 
 export const revalidate = 3600;
@@ -24,12 +24,12 @@ export default async function CoursesPage({ params }: Props) {
   const supabase = createPublicClient();
   const { data: rows } = await supabase
     .from("courses")
-    .select("*")
+    .select(COURSE_WITH_AUTHOR_SELECT)
     .eq("published", true)
     .order("created_at");
 
-  const courses = (rows as DbCourse[] ?? []).map((c) =>
-    localizedCourse(c, locale as Locale)
+  const courses = ((rows as DbCourseRow[]) ?? []).map((c) =>
+    mapCourse(c, locale as Locale)
   );
 
   return (

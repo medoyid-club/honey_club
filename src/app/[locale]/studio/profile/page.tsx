@@ -4,6 +4,7 @@ import {
   toggleAuthorPagePublished,
   updateAuthorProfile,
 } from "@/app/[locale]/studio/profile/actions";
+import { TranslateEmptyFieldsButton } from "@/components/studio/translate-empty-fields-button";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -58,7 +59,7 @@ export default async function StudioProfilePage({ params, searchParams }: Props)
         </div>
       )}
 
-      <form action={updateAuthorProfile} className="space-y-6">
+      <form id="studio-profile-form" action={updateAuthorProfile} className="space-y-6">
         <input type="hidden" name="locale" value={locale} />
 
         <Card>
@@ -77,6 +78,14 @@ export default async function StudioProfilePage({ params, searchParams }: Props)
             </div>
           </CardContent>
         </Card>
+
+        <div className="flex justify-end">
+          <TranslateEmptyFieldsButton
+            formId="studio-profile-form"
+            fieldBases={["headline", "slogan", "bio"]}
+            locale={locale}
+          />
+        </div>
 
         <Card>
           <CardHeader>

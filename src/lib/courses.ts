@@ -28,6 +28,7 @@ export type DbCourse = {
   author_page_id: string | null;
   status: CourseStatus;
   cover_url: string | null;
+  overview_video_url: string | null;
   format: CourseFormat;
   level: CourseLevel;
   duration_hours: number;
@@ -38,6 +39,8 @@ export type DbCourse = {
   stripe_price_id: string | null;
   tags: string[];
   published: boolean;
+  cohort_starts_at: string | null;
+  schedule_timezone: string;
   created_at: string;
 };
 
@@ -68,6 +71,7 @@ export type DbLesson = {
   content_en: string | null;
   duration_minutes: number;
   video_url: string | null;
+  scheduled_at: string | null;
   resources: unknown;
 };
 
@@ -95,6 +99,20 @@ export function isSellable(status: CourseStatus): boolean {
   return status !== "draft";
 }
 
+export type AuthorPageJoin = {
+  slug: string;
+  avatar_url: string | null;
+  display_name: string | null;
+};
+
+export type DbCourseRow = DbCourse & {
+  author_pages?: AuthorPageJoin | AuthorPageJoin[] | null;
+};
+
+/** Select fragment for course lists with author page metadata. */
+export const COURSE_WITH_AUTHOR_SELECT =
+  "*, author_pages(slug, avatar_url, display_name)";
+
 export type Course = {
   id: string;
   slug: string;
@@ -102,10 +120,13 @@ export type Course = {
   summary: string;
   description: string | null;
   author: string;
+  authorSlug: string | null;
+  authorAvatarUrl: string | null;
   authorId: string | null;
   authorPageId: string | null;
   status: CourseStatus;
   coverUrl: string | null;
+  overviewVideoUrl: string | null;
   format: CourseFormat;
   level: CourseLevel;
   durationHours: number;
@@ -137,10 +158,13 @@ export function localizedCourse(course: DbCourse, locale: Locale): Course {
           ? course.description_en
           : null) ?? course.description_ru,
     author: course.author_name,
+    authorSlug: null,
+    authorAvatarUrl: null,
     authorId: course.author_id,
     authorPageId: course.author_page_id,
     status: course.status,
     coverUrl: course.cover_url,
+    overviewVideoUrl: course.overview_video_url ?? null,
     format: course.format,
     level: course.level,
     durationHours: course.duration_hours,
@@ -150,6 +174,25 @@ export function localizedCourse(course: DbCourse, locale: Locale): Course {
     priceOfflineUsd: course.price_offline_usd,
     stripePriceId: course.stripe_price_id,
     tags: course.tags,
+  };
+}
+
+function authorPageFromRow(row: DbCourseRow): AuthorPageJoin | null {
+  const page = row.author_pages;
+  if (!page) return null;
+  return Array.isArray(page) ? (page[0] ?? null) : page;
+}
+
+/** Maps a DB row (optionally joined with author_pages) to a localized Course. */
+export function mapCourse(row: DbCourseRow, locale: Locale): Course {
+  const base = localizedCourse(row, locale);
+  const page = authorPageFromRow(row);
+  if (!page) return base;
+  return {
+    ...base,
+    author: page.display_name || base.author,
+    authorSlug: page.slug,
+    authorAvatarUrl: page.avatar_url,
   };
 }
 

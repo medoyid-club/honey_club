@@ -54,6 +54,7 @@
     "label": "Language"
   },
   "Home": {
+    "heroBannerAlt": "Illustration: learning, mindfulness, and exploring the world",
     "badge": "Learning + game",
     "title": "Learn, grow and find your people at Medoyid Club",
     "subtitle": "Online courses, lectures and seminars for personal growth. Next stage — a social RPG environment with a world map, quests and matching by interests and personality type.",
@@ -122,6 +123,28 @@
       "lecture": "Lecture",
       "practice": "Practice",
       "seminar": "Seminar"
+    },
+    "schedule": {
+      "title": "Class schedule",
+      "subtitle": "Live online sessions in September 2026. Click a day for details.",
+      "starts": "Cohort starts",
+      "prevMonth": "Previous month",
+      "nextMonth": "Next month",
+      "legendLecture": "Lecture · 2 h",
+      "legendSeminar": "Seminar · 3 h",
+      "timezone": "Time zone: {tz}",
+      "pickDay": "Pick a day on the calendar to see sessions.",
+      "noEvents": "No sessions on this day.",
+      "weekDay": "Week {week}, day {day}",
+      "weekdays": {
+        "mon": "Mon",
+        "tue": "Tue",
+        "wed": "Wed",
+        "thu": "Thu",
+        "fri": "Fri",
+        "sat": "Sat",
+        "sun": "Sun"
+      }
     }
   },
   "Login": {
@@ -212,6 +235,17 @@
       "blog": "Blog",
       "videos": "Videos"
     },
+    "translate": {
+      "translateEmpty": "Translate empty fields",
+      "translating": "Translating…",
+      "filled": "Filled {count} field(s)",
+      "nothingToFill": "All languages are filled or there is no source text.",
+      "errors": {
+        "missing_api_key": "Translation is not configured. Add GOOGLE_TRANSLATE_API_KEY.",
+        "nothing_to_fill": "Nothing to translate — fill at least one language first.",
+        "translate_failed": "Translation failed. Try again later."
+      }
+    },
     "profileForm": {
       "title": "Author profile",
       "subtitle": "Cover, name, slogan, bio, socials, and contacts.",
@@ -277,7 +311,14 @@
       "addLesson": "Add lesson",
       "newModule": "Module title",
       "addModule": "Add module",
-      "deleteCourse": "Delete course"
+      "deleteCourse": "Delete course",
+      "mediaTitle": "Cover and overview video",
+      "mediaHint": "Publishing requires a 16:9 cover image and a short overview video (MP4).",
+      "cover": "Course cover",
+      "overviewVideo": "Overview video",
+      "currentCover": "Current cover",
+      "currentOverviewVideo": "Current video",
+      "mediaRequired": "Upload a cover and overview video before publishing."
     },
     "blog": {
       "title": "Blog",

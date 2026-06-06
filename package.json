@@ -7,7 +7,10 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "sandbox:init": "node scripts/init-sandbox.mjs"
+    "sandbox:init": "node scripts/init-sandbox.mjs",
+    "seed:nata-manipulations": "node scripts/seed-nata-manipulations.mjs",
+    "seed:nata-manipulations-upcoming": "node scripts/seed-nata-manipulations-upcoming.mjs",
+    "seed:nata-course-media": "node scripts/seed-nata-course-media.mjs"
   },
   "dependencies": {
     "@base-ui/react": "^1.5.0",

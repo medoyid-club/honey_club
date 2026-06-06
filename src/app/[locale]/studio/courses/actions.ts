@@ -4,6 +4,10 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
 import type { CourseStatus, LessonType } from "@/lib/courses";
+import {
+  uploadCourseCover,
+  uploadCourseOverviewVideo,
+} from "@/lib/course-media";
 import { slugify } from "@/lib/slug";
 import { getStudioContext } from "@/lib/studio";
 import { createClient } from "@/lib/supabase/server";
@@ -126,6 +130,35 @@ export async function updateCourse(formData: FormData) {
     .split(",")
     .map((s) => s.trim())
     .filter(Boolean);
+  const published = formData.get("published") === "on";
+
+  const { data: existing } = await supabase
+    .from("courses")
+    .select("cover_url, overview_video_url")
+    .eq("id", courseId)
+    .eq("author_page_id", page.id)
+    .maybeSingle();
+
+  if (!existing) {
+    redirect(`/${locale}/studio/courses?error=not_found`);
+  }
+
+  const coverFile = formData.get("cover") as File | null;
+  const videoFile = formData.get("overview_video") as File | null;
+
+  const coverUrl =
+    (coverFile?.size
+      ? await uploadCourseCover(supabase, page.id, courseId, coverFile)
+      : null) ?? existing.cover_url;
+
+  const overviewVideoUrl =
+    (videoFile?.size
+      ? await uploadCourseOverviewVideo(supabase, page.id, courseId, videoFile)
+      : null) ?? existing.overview_video_url;
+
+  if (published && (!coverUrl || !overviewVideoUrl)) {
+    redirect(`/${locale}/studio/courses/${courseId}?error=media_required`);
+  }
 
   await supabase
     .from("courses")
@@ -144,11 +177,14 @@ export async function updateCourse(formData: FormData) {
       status: STATUSES.includes(status) ? status : "draft",
       price_online_usd: int(formData, "price_online_usd"),
       price_offline_usd: int(formData, "price_offline_usd"),
-      published: formData.get("published") === "on",
+      published,
       author_name: page.display_name || "Автор",
       tags,
+      cover_url: coverUrl,
+      overview_video_url: overviewVideoUrl,
     })
-    .eq("id", courseId);
+    .eq("id", courseId)
+    .eq("author_page_id", page.id);
 
   revalidatePath(`/${locale}/studio/courses/${courseId}`);
   redirect(`/${locale}/studio/courses/${courseId}?saved=1`);

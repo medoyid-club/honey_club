@@ -11,6 +11,7 @@ import {
   updateLesson,
   updateModule,
 } from "@/app/[locale]/studio/courses/actions";
+import { TranslateEmptyFieldsButton } from "@/components/studio/translate-empty-fields-button";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -25,7 +26,7 @@ import { createClient } from "@/lib/supabase/server";
 
 type Props = {
   params: Promise<{ locale: string; courseId: string }>;
-  searchParams: Promise<{ saved?: string }>;
+  searchParams: Promise<{ saved?: string; error?: string }>;
 };
 
 const inputClass =
@@ -37,7 +38,7 @@ export default async function StudioCourseEditorPage({
 }: Props) {
   const { locale, courseId } = await params;
   setRequestLocale(locale);
-  const { saved } = await searchParams;
+  const { saved, error: errorParam } = await searchParams;
 
   const { page } = await getStudioContext(locale);
   const t = await getTranslations("Studio.courseEditor");
@@ -104,14 +105,30 @@ export default async function StudioCourseEditorPage({
         </div>
       )}
 
-      {/* Course meta */}
-      <form action={updateCourse} className="space-y-6">
+      {errorParam === "media_required" && (
+        <div className="rounded-lg border border-destructive/40 bg-destructive/5 p-3 text-sm text-destructive">
+          {t("mediaRequired")}
+        </div>
+      )}
+
+      {/* Course meta + media */}
+      <form
+        id="studio-course-form"
+        action={updateCourse}
+        encType="multipart/form-data"
+        className="space-y-6"
+      >
         <input type="hidden" name="locale" value={locale} />
         <input type="hidden" name="courseId" value={course.id} />
 
         <Card>
-          <CardHeader>
+          <CardHeader className="flex flex-row items-start justify-between gap-3 space-y-0">
             <CardTitle>{t("metaTitle")}</CardTitle>
+            <TranslateEmptyFieldsButton
+              formId="studio-course-form"
+              fieldBases={["title", "summary", "description"]}
+              locale={locale}
+            />
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="grid gap-4 sm:grid-cols-3">
@@ -187,6 +204,35 @@ export default async function StudioCourseEditorPage({
             </div>
           </CardContent>
         </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>{t("mediaTitle")}</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <p className="text-sm text-muted-foreground">{t("mediaHint")}</p>
+            <div className="grid gap-6 sm:grid-cols-2">
+              <MediaField
+                name="cover"
+                label={t("cover")}
+                accept="image/jpeg,image/png,image/webp"
+                currentUrl={course.cover_url}
+                currentLabel={t("currentCover")}
+              />
+              <MediaField
+                name="overview_video"
+                label={t("overviewVideo")}
+                accept="video/mp4,video/webm"
+                currentUrl={course.overview_video_url}
+                currentLabel={t("currentOverviewVideo")}
+                isVideo
+              />
+            </div>
+            <div className="flex justify-end">
+              <Button type="submit">{t("saveCourse")}</Button>
+            </div>
+          </CardContent>
+        </Card>
       </form>
 
       {/* Modules */}
@@ -209,10 +255,21 @@ export default async function StudioCourseEditorPage({
                   <summary className="cursor-pointer text-sm text-primary">
                     {t("editModule")}
                   </summary>
-                  <form action={updateModule} className="mt-3 space-y-3">
+                  <form
+                    id={`studio-module-${m.id}`}
+                    action={updateModule}
+                    className="mt-3 space-y-3"
+                  >
                     <input type="hidden" name="locale" value={locale} />
                     <input type="hidden" name="courseId" value={course.id} />
                     <input type="hidden" name="moduleId" value={m.id} />
+                    <div className="flex justify-end">
+                      <TranslateEmptyFieldsButton
+                        formId={`studio-module-${m.id}`}
+                        fieldBases={["title", "summary"]}
+                        locale={locale}
+                      />
+                    </div>
                     <div className="grid gap-3 sm:grid-cols-4">
                       <Field name="position" label={t("position")} value={String(m.position)} type="number" />
                       <Field name="title_ru" label="RU" value={m.title_ru} />
@@ -254,10 +311,21 @@ export default async function StudioCourseEditorPage({
                           ({tType(l.type)}, {l.duration_minutes} {t("min")})
                         </span>
                       </summary>
-                      <form action={updateLesson} className="mt-3 space-y-3">
+                      <form
+                        id={`studio-lesson-${l.id}`}
+                        action={updateLesson}
+                        className="mt-3 space-y-3"
+                      >
                         <input type="hidden" name="locale" value={locale} />
                         <input type="hidden" name="courseId" value={course.id} />
                         <input type="hidden" name="lessonId" value={l.id} />
+                        <div className="flex justify-end">
+                          <TranslateEmptyFieldsButton
+                            formId={`studio-lesson-${l.id}`}
+                            fieldBases={["title", "content"]}
+                            locale={locale}
+                          />
+                        </div>
                         <div className="grid gap-3 sm:grid-cols-4">
                           <Field name="position" label={t("position")} value={String(l.position)} type="number" />
                           <label className="space-y-1 text-sm">
@@ -391,6 +459,53 @@ function Area({
         defaultValue={value ?? ""}
         rows={rows}
         className={`${inputClass} resize-y`}
+      />
+    </label>
+  );
+}
+
+function MediaField({
+  name,
+  label,
+  accept,
+  currentUrl,
+  currentLabel,
+  isVideo = false,
+}: {
+  name: string;
+  label: string;
+  accept: string;
+  currentUrl: string | null;
+  currentLabel: string;
+  isVideo?: boolean;
+}) {
+  return (
+    <label className="space-y-2 text-sm">
+      <span className="text-muted-foreground">{label}</span>
+      {currentUrl && (
+        <div className="overflow-hidden rounded-md border border-border">
+          {isVideo ? (
+            <video
+              src={currentUrl}
+              controls
+              playsInline
+              preload="metadata"
+              className="aspect-video w-full bg-black"
+            />
+          ) : (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img src={currentUrl} alt="" className="aspect-video w-full object-cover" />
+          )}
+          <p className="border-t border-border px-2 py-1 text-xs text-muted-foreground">
+            {currentLabel}
+          </p>
+        </div>
+      )}
+      <input
+        type="file"
+        name={name}
+        accept={accept}
+        className="block w-full text-sm file:mr-3 file:rounded-md file:border-0 file:bg-primary/10 file:px-3 file:py-1.5 file:text-sm file:font-medium file:text-primary"
       />
     </label>
   );
