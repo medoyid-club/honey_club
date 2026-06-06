@@ -36,6 +36,7 @@ export type DbCourse = {
   price_usd: number;
   price_online_usd: number;
   price_offline_usd: number;
+  sale_discount_percent: number | null;
   stripe_price_id: string | null;
   tags: string[];
   published: boolean;
@@ -56,6 +57,7 @@ export type DbModule = {
   summary_en: string | null;
   price_online_usd: number;
   price_offline_usd: number;
+  sale_discount_percent: number | null;
 };
 
 export type DbLesson = {
@@ -134,6 +136,7 @@ export type Course = {
   priceUsd: number;
   priceOnlineUsd: number;
   priceOfflineUsd: number;
+  saleDiscountPercent: number | null;
   stripePriceId: string | null;
   tags: string[];
 };
@@ -172,6 +175,7 @@ export function localizedCourse(course: DbCourse, locale: Locale): Course {
     priceUsd: course.price_usd,
     priceOnlineUsd: course.price_online_usd,
     priceOfflineUsd: course.price_offline_usd,
+    saleDiscountPercent: course.sale_discount_percent,
     stripePriceId: course.stripe_price_id,
     tags: course.tags,
   };

@@ -4,6 +4,7 @@ import Image from "next/image";
 import { useTranslations } from "next-intl";
 
 import { CourseCardAuthor } from "@/components/course-card-author";
+import { CoursePrice } from "@/components/course-price";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -15,7 +16,8 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Link } from "@/i18n/navigation";
-import { formatPrice, type Course } from "@/lib/courses";
+import { type Course } from "@/lib/courses";
+import { courseDisplayPrice } from "@/lib/pricing";
 
 type Props = {
   course: Course;
@@ -24,6 +26,12 @@ type Props = {
 
 export function CourseCard({ course, variant = "featured" }: Props) {
   const t = useTranslations("Course");
+  const pricing = courseDisplayPrice({
+    status: course.status,
+    priceOnlineUsd: course.priceOnlineUsd,
+    priceOfflineUsd: course.priceOfflineUsd,
+    saleDiscountPercent: course.saleDiscountPercent,
+  });
 
   const formatLabels = {
     course: t("formatCourse"),
@@ -36,7 +44,6 @@ export function CourseCard({ course, variant = "featured" }: Props) {
     advanced: t("levelAdvanced"),
   };
 
-  const price = course.priceUsd === 0 ? t("free") : formatPrice(course.priceUsd);
   const coverBadgeClass =
     "border-border bg-card text-card-foreground shadow-md";
   const badges = (
@@ -53,6 +60,11 @@ export function CourseCard({ course, variant = "featured" }: Props) {
       <Badge variant="outline" className={coverBadgeClass}>
         {levelLabels[course.level]}
       </Badge>
+      {pricing?.discountPercent ? (
+        <Badge className={`${coverBadgeClass} bg-destructive/10 text-destructive`}>
+          −{pricing.discountPercent}%
+        </Badge>
+      ) : null}
     </>
   );
 
@@ -79,8 +91,8 @@ export function CourseCard({ course, variant = "featured" }: Props) {
           <p>{t("meta", { lessons: course.lessons, hours: course.durationHours })}</p>
         </CardContent>
 
-        <CardFooter className="mt-auto justify-between">
-          <span className="text-sm font-medium">{price}</span>
+        <CardFooter className="mt-auto justify-between gap-3">
+          <CoursePrice pricing={pricing} size="sm" />
           <Button
             size="sm"
             nativeButton={false}
@@ -130,8 +142,8 @@ export function CourseCard({ course, variant = "featured" }: Props) {
         <p>{t("meta", { lessons: course.lessons, hours: course.durationHours })}</p>
       </CardContent>
 
-      <CardFooter className="mt-auto justify-between pb-6">
-        <span className="font-heading text-base font-semibold text-primary">{price}</span>
+      <CardFooter className="mt-auto justify-between gap-3 pb-6">
+        <CoursePrice pricing={pricing} />
         <Button
           size="sm"
           nativeButton={false}

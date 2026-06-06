@@ -38,6 +38,7 @@ type OutlineRow = {
   module_summary_en: string | null;
   module_price_online_usd: number;
   module_price_offline_usd: number;
+  module_sale_discount_percent: number | null;
   lesson_id: string | null;
   lesson_position: number | null;
   lesson_type: LessonType | null;
@@ -107,6 +108,7 @@ export default async function CoursePage({ params, searchParams }: Props) {
     summary: string;
     priceOnlineUsd: number;
     priceOfflineUsd: number;
+    saleDiscountPercent: number | null;
     lessons: {
       id: string;
       position: number;
@@ -129,6 +131,7 @@ export default async function CoursePage({ params, searchParams }: Props) {
         summary: pick(activeLocale, r.module_summary_ru, r.module_summary_uk, r.module_summary_en),
         priceOnlineUsd: r.module_price_online_usd,
         priceOfflineUsd: r.module_price_offline_usd,
+        saleDiscountPercent: r.module_sale_discount_percent ?? null,
         lessons: [],
       };
       moduleMap.set(r.module_id, group);
@@ -206,6 +209,7 @@ export default async function CoursePage({ params, searchParams }: Props) {
     title: m.title,
     priceOnlineUsd: m.priceOnlineUsd,
     priceOfflineUsd: m.priceOfflineUsd,
+    saleDiscountPercent: m.saleDiscountPercent,
   }));
 
   return (
@@ -375,6 +379,7 @@ export default async function CoursePage({ params, searchParams }: Props) {
             status={course.status}
             priceOnlineUsd={course.priceOnlineUsd}
             priceOfflineUsd={course.priceOfflineUsd}
+            saleDiscountPercent={course.saleDiscountPercent}
             modules={purchaseModules}
             isLoggedIn={!!user}
             fullCourseAccess={access.fullCourse}

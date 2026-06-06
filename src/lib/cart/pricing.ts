@@ -3,6 +3,7 @@ import {
   type CourseStatus,
   type PricingMode,
 } from "@/lib/courses";
+import { applyPercentDiscount } from "@/lib/pricing";
 import type { CartScope } from "@/lib/cart/types";
 import type { SupabaseClient } from "@supabase/supabase-js";
 
@@ -24,7 +25,9 @@ export async function resolveCartLine(
 ): Promise<PricedLine | null> {
   const { data: course } = await supabase
     .from("courses")
-    .select("id, status, title_ru, price_online_usd, price_offline_usd, author_page_id")
+    .select(
+      "id, status, title_ru, price_online_usd, price_offline_usd, author_page_id, sale_discount_percent"
+    )
     .eq("id", courseId)
     .single();
 
@@ -42,7 +45,10 @@ export async function resolveCartLine(
       courseId,
       moduleId: null,
       scope,
-      unitPriceCents: pricing.priceUsd,
+      unitPriceCents: applyPercentDiscount(
+        pricing.priceUsd,
+        course.sale_discount_percent
+      ),
       pricingMode: pricing.mode,
       title: course.title_ru,
       authorPageId: course.author_page_id,
@@ -53,21 +59,21 @@ export async function resolveCartLine(
 
   const { data: mod } = await supabase
     .from("course_modules")
-    .select("id, title_ru, price_online_usd, price_offline_usd")
+    .select("id, title_ru, price_online_usd, price_offline_usd, sale_discount_percent")
     .eq("id", moduleId)
     .eq("course_id", courseId)
     .single();
 
   if (!mod) return null;
 
-  const unitPriceCents =
+  const baseCents =
     pricing.mode === "online" ? mod.price_online_usd : mod.price_offline_usd;
 
   return {
     courseId,
     moduleId,
     scope,
-    unitPriceCents,
+    unitPriceCents: applyPercentDiscount(baseCents, mod.sale_discount_percent),
     pricingMode: pricing.mode,
     title: `${course.title_ru} — ${mod.title_ru}`,
     authorPageId: course.author_page_id,

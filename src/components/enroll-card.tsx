@@ -2,6 +2,7 @@ import { Check } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 
 import { addToCart, enrollFree } from "@/app/[locale]/cart/actions";
+import { CoursePrice } from "@/components/course-price";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -11,13 +12,15 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Link } from "@/i18n/navigation";
-import { activePricing, formatPrice, type CourseStatus } from "@/lib/courses";
+import { formatPrice, type CourseStatus } from "@/lib/courses";
+import { courseDisplayPrice, moduleDisplayPrice } from "@/lib/pricing";
 
 export type PurchaseModule = {
   id: string;
   title: string;
   priceOnlineUsd: number;
   priceOfflineUsd: number;
+  saleDiscountPercent: number | null;
 };
 
 type Props = {
@@ -27,6 +30,7 @@ type Props = {
   status: CourseStatus;
   priceOnlineUsd: number;
   priceOfflineUsd: number;
+  saleDiscountPercent: number | null;
   modules: PurchaseModule[];
   isLoggedIn: boolean;
   fullCourseAccess: boolean;
@@ -41,6 +45,7 @@ export async function EnrollCard({
   status,
   priceOnlineUsd,
   priceOfflineUsd,
+  saleDiscountPercent,
   modules,
   isLoggedIn,
   fullCourseAccess,
@@ -49,10 +54,15 @@ export async function EnrollCard({
 }: Props) {
   const t = await getTranslations("Course");
 
-  const pricing = activePricing(status, priceOnlineUsd, priceOfflineUsd);
+  const coursePricing = courseDisplayPrice({
+    status,
+    priceOnlineUsd,
+    priceOfflineUsd,
+    saleDiscountPercent,
+  });
   const owned = new Set(ownedModuleIds);
 
-  if (!pricing) {
+  if (!coursePricing) {
     return (
       <Card>
         <CardHeader>
@@ -78,17 +88,17 @@ export async function EnrollCard({
     );
   }
 
-  const courseIsFree = pricing.priceUsd === 0;
-  const coursePriceLabel = courseIsFree ? t("free") : formatPrice(pricing.priceUsd);
-  const modePrice = (m: PurchaseModule) =>
-    pricing.mode === "online" ? m.priceOnlineUsd : m.priceOfflineUsd;
+  const courseIsFree = coursePricing.currentCents === 0;
+  const coursePriceLabel = courseIsFree
+    ? t("free")
+    : formatPrice(coursePricing.currentCents);
 
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="font-heading text-2xl">{coursePriceLabel}</CardTitle>
+        <CoursePrice pricing={coursePricing} size="md" className="text-2xl" />
         <p className="text-xs text-muted-foreground">
-          {pricing.mode === "online" ? t("priceOnlineLabel") : t("priceOfflineLabel")}
+          {coursePricing.mode === "online" ? t("priceOnlineLabel") : t("priceOfflineLabel")}
         </p>
       </CardHeader>
 
@@ -124,14 +134,19 @@ export async function EnrollCard({
           </form>
         )}
 
-        {modules.length > 0 && !courseIsFree && (
+        {modules.length > 0 && !courseIsFree && coursePricing.mode && (
           <div className="space-y-2 border-t border-foreground/10 pt-3">
             <p className="text-xs font-medium uppercase tracking-wide text-foreground/70">
               {t("buyByModule")}
             </p>
             {modules.map((m) => {
               const isOwned = owned.has(m.id);
-              const price = modePrice(m);
+              const modulePricing = moduleDisplayPrice({
+                pricingMode: coursePricing.mode!,
+                priceOnlineUsd: m.priceOnlineUsd,
+                priceOfflineUsd: m.priceOfflineUsd,
+                saleDiscountPercent: m.saleDiscountPercent,
+              });
               return (
                 <div
                   key={m.id}
@@ -144,21 +159,19 @@ export async function EnrollCard({
                       {t("owned")}
                     </span>
                   ) : isLoggedIn ? (
-                    <form action={addToCart}>
+                    <form action={addToCart} className="flex items-center gap-2">
                       <input type="hidden" name="scope" value="module" />
                       <input type="hidden" name="courseId" value={courseId} />
                       <input type="hidden" name="moduleId" value={m.id} />
                       <input type="hidden" name="locale" value={locale} />
                       <input type="hidden" name="slug" value={slug} />
+                      <CoursePrice pricing={modulePricing} size="sm" />
                       <Button type="submit" variant="outline" size="sm">
-                        {t("addModuleToCart")}{" "}
-                        {price === 0 ? t("free") : formatPrice(price)}
+                        {t("addModuleToCart")}
                       </Button>
                     </form>
                   ) : (
-                    <span className="text-muted-foreground">
-                      {price === 0 ? t("free") : formatPrice(price)}
-                    </span>
+                    <CoursePrice pricing={modulePricing} size="sm" />
                   )}
                 </div>
               );

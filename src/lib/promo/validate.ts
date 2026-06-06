@@ -15,23 +15,74 @@ export type CartTotals = {
   promo: PromoCodeRow | null;
 };
 
+export type PromoScopeItem = {
+  courseId: string;
+  moduleId: string | null;
+};
+
+export type PromoCodeWithScopes = PromoCodeRow & {
+  scopes: PromoScopeItem[];
+};
+
 function itemAppliesToPromo(
   item: CartItem & { authorPageId: string | null },
-  promo: PromoCodeRow
+  promo: PromoCodeWithScopes
 ): boolean {
-  if (promo.applies_to === "course" && item.scope !== "course") return false;
-  if (promo.applies_to === "module" && item.scope !== "module") return false;
-  if (promo.course_id && promo.course_id !== item.courseId) return false;
-  return promo.author_page_id === item.authorPageId;
+  if (promo.author_page_id !== item.authorPageId) return false;
+
+  if (promo.scopes.length > 0) {
+    return promo.scopes.some((scope) => {
+      if (scope.courseId !== item.courseId) return false;
+      if (scope.moduleId === null) return true;
+      return item.scope === "module" && item.moduleId === scope.moduleId;
+    });
+  }
+
+  if (promo.applies_to === "all") return true;
+  if (promo.applies_to === "course") {
+    return item.scope === "course" && promo.course_id === item.courseId;
+  }
+  if (promo.applies_to === "module") {
+    return item.scope === "module" && promo.course_id === item.courseId;
+  }
+  return false;
+}
+
+async function attachPromoScopes(
+  svc: SupabaseClient,
+  rows: PromoCodeRow[]
+): Promise<PromoCodeWithScopes[]> {
+  if (rows.length === 0) return [];
+
+  const ids = rows.map((row) => row.id);
+  const { data: scopeRows } = await svc
+    .from("promo_code_items")
+    .select("promo_code_id, course_id, module_id")
+    .in("promo_code_id", ids);
+
+  const scopesByPromo = new Map<string, PromoScopeItem[]>();
+  for (const row of scopeRows ?? []) {
+    const list = scopesByPromo.get(row.promo_code_id as string) ?? [];
+    list.push({
+      courseId: row.course_id as string,
+      moduleId: (row.module_id as string | null) ?? null,
+    });
+    scopesByPromo.set(row.promo_code_id as string, list);
+  }
+
+  return rows.map((row) => ({
+    ...row,
+    scopes: scopesByPromo.get(row.id) ?? [],
+  }));
 }
 
 export async function validatePromoCode(
   svc: SupabaseClient,
   code: string,
   authorPageIds: string[]
-): Promise<PromoCodeRow | null> {
+): Promise<PromoCodeWithScopes | null> {
   const normalized = code.trim().toUpperCase();
-  if (!normalized) return null;
+  if (!normalized || authorPageIds.length === 0) return null;
 
   const { data } = await svc
     .from("promo_codes")
@@ -49,12 +100,13 @@ export async function validatePromoCode(
     return null;
   }
 
-  return row;
+  const [withScopes] = await attachPromoScopes(svc, [row]);
+  return withScopes ?? null;
 }
 
 export function calculateCartTotals(
   lines: (CartItem & { authorPageId: string | null })[],
-  promo: PromoCodeRow | null
+  promo: PromoCodeWithScopes | null
 ): CartTotals {
   const subtotalCents = lines.reduce((sum, line) => sum + line.unitPriceCents, 0);
 

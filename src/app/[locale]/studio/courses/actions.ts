@@ -27,6 +27,14 @@ function int(formData: FormData, key: string): number {
   return Number.isFinite(v) && v >= 0 ? v : 0;
 }
 
+function parseSaleDiscount(formData: FormData, key: string): number | null {
+  const raw = ((formData.get(key) as string) || "").trim();
+  if (!raw) return null;
+  const v = parseInt(raw, 10);
+  if (!Number.isFinite(v) || v < 1 || v > 100) return null;
+  return v;
+}
+
 function str(formData: FormData, key: string): string {
   return ((formData.get(key) as string) || "").trim();
 }
@@ -177,6 +185,7 @@ export async function updateCourse(formData: FormData) {
       status: STATUSES.includes(status) ? status : "draft",
       price_online_usd: int(formData, "price_online_usd"),
       price_offline_usd: int(formData, "price_offline_usd"),
+      sale_discount_percent: parseSaleDiscount(formData, "sale_discount_percent"),
       published,
       author_name: page.display_name || "Автор",
       tags,
@@ -243,6 +252,7 @@ export async function updateModule(formData: FormData) {
       summary_en: str(formData, "summary_en") || null,
       price_online_usd: int(formData, "price_online_usd"),
       price_offline_usd: int(formData, "price_offline_usd"),
+      sale_discount_percent: parseSaleDiscount(formData, "sale_discount_percent"),
     })
     .eq("id", moduleId);
 

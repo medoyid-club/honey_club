@@ -285,6 +285,14 @@
       "delete": "Delete",
       "unlimited": "∞",
       "stats": "−{discount}% · used {used} / {max}",
+      "scopeTitle": "Applies to",
+      "scopeHint": "If nothing is selected, the promo applies to all your courses. Check a whole course or individual modules.",
+      "wholeCourse": "whole course",
+      "moduleShort": "Module",
+      "allCourses": "all courses",
+      "appliesTo": "Applies to",
+      "noCourses": "Create a course first",
+      "unknownScope": "unknown item",
       "errors": {
         "invalid": "Check the code and discount percentage",
         "duplicate": "This promo code already exists"
@@ -345,6 +353,8 @@
       "priceOffline": "Recording price (EUR cents)",
       "tags": "Tags (comma-separated)",
       "priceHint": "Active price is chosen by status: upcoming/live — online, completed/archived — recording.",
+      "saleDiscount": "Card discount, %",
+      "saleDiscountPlaceholder": "No discount",
       "published": "Published (visible on site)",
       "saveCourse": "Save course",
       "modulesTitle": "Modules and lessons",

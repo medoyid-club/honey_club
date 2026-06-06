@@ -187,6 +187,15 @@ export default async function StudioCourseEditorPage({
                 value={String(course.price_offline_usd)}
                 type="number"
               />
+              <Field
+                name="sale_discount_percent"
+                label={t("saleDiscount")}
+                value={course.sale_discount_percent != null ? String(course.sale_discount_percent) : ""}
+                type="number"
+                placeholder={t("saleDiscountPlaceholder")}
+              />
+            </div>
+            <div className="grid gap-4 sm:grid-cols-3">
               <Field name="tags" label={t("tags")} value={course.tags.join(", ")} />
             </div>
             <p className="text-xs text-muted-foreground">{t("priceHint")}</p>
@@ -281,9 +290,16 @@ export default async function StudioCourseEditorPage({
                       <Area name="summary_uk" label={`${t("summary")} UK`} value={m.summary_uk} />
                       <Area name="summary_en" label={`${t("summary")} EN`} value={m.summary_en} />
                     </div>
-                    <div className="grid gap-3 sm:grid-cols-2">
+                    <div className="grid gap-3 sm:grid-cols-3">
                       <Field name="price_online_usd" label={t("priceOnline")} value={String(m.price_online_usd)} type="number" />
                       <Field name="price_offline_usd" label={t("priceOffline")} value={String(m.price_offline_usd)} type="number" />
+                      <Field
+                        name="sale_discount_percent"
+                        label={t("saleDiscount")}
+                        value={m.sale_discount_percent != null ? String(m.sale_discount_percent) : ""}
+                        type="number"
+                        placeholder={t("saleDiscountPlaceholder")}
+                      />
                     </div>
                     <div className="flex justify-end">
                       <Button type="submit" variant="outline" size="sm">
@@ -421,11 +437,13 @@ function Field({
   label,
   value,
   type = "text",
+  placeholder,
 }: {
   name: string;
   label: string;
   value: string | null;
   type?: string;
+  placeholder?: string;
 }) {
   return (
     <label className="space-y-1 text-sm">
@@ -434,6 +452,7 @@ function Field({
         name={name}
         type={type}
         defaultValue={value ?? ""}
+        placeholder={placeholder}
         className={inputClass}
       />
     </label>
