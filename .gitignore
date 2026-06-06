@@ -52,3 +52,6 @@ supabase/.temp/
 
 # Project drafts (images, exports, etc.)
 temp/
+
+# Local UI sandbox (copy from sandbox.template via npm run sandbox:init)
+/src/app/*/sandbox/
