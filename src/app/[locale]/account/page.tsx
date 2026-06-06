@@ -36,7 +36,7 @@ export default async function AccountOverviewPage({ params }: Props) {
   if (!user) return null;
 
   const profile = await getUserProfile(user.id, user.email);
-  const enrollments = await getUserEnrollments(user.id, locale as Locale);
+  const enrollments = await getUserEnrollments(user.id, locale as Locale, user.email);
   const t = await getTranslations("Account");
 
   return (

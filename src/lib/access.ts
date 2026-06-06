@@ -12,17 +12,29 @@ export type CourseAccess = {
 export async function getCourseAccess(
   supabase: SupabaseClient,
   userId: string | null | undefined,
-  courseId: string
+  courseId: string,
+  userEmail?: string | null
 ): Promise<CourseAccess> {
   const access: CourseAccess = { fullCourse: false, moduleIds: new Set() };
-  if (!userId) return access;
+  if (!userId && !userEmail) return access;
 
-  const { data } = await supabase
+  let query = supabase
     .from("enrollments")
-    .select("scope, module_id, payment_status")
-    .eq("user_id", userId)
+    .select("scope, module_id, payment_status, user_id, is_gift, gift_recipient_email")
     .eq("course_id", courseId)
     .in("payment_status", ["free", "paid"]);
+
+  if (userId && userEmail) {
+    query = query.or(
+      `user_id.eq.${userId},and(is_gift.eq.true,gift_recipient_email.ilike.${userEmail})`
+    );
+  } else if (userId) {
+    query = query.eq("user_id", userId);
+  } else if (userEmail) {
+    query = query.eq("is_gift", true).ilike("gift_recipient_email", userEmail);
+  }
+
+  const { data } = await query;
 
   for (const row of data ?? []) {
     if (row.scope === "module" && row.module_id) {

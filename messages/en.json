@@ -7,7 +7,36 @@
     "start": "Get started",
     "account": "Account",
     "studio": "Studio",
-    "admin": "Admin"
+    "admin": "Admin",
+    "menu": "Menu",
+    "openMenu": "Open menu",
+    "closeMenu": "Close menu",
+    "cart": "Cart"
+  },
+  "Cart": {
+    "title": "Cart",
+    "subtitle": "Review items before checkout",
+    "empty": "Your cart is empty",
+    "browseCourses": "Browse courses",
+    "added": "Added to cart",
+    "cancelled": "Checkout cancelled",
+    "free": "Free",
+    "giftLabel": "Gift this access",
+    "giftEmail": "Recipient email",
+    "saveGift": "Save",
+    "remove": "Remove",
+    "promoCode": "Promo code",
+    "subtotal": "Subtotal",
+    "checkout": "Proceed to checkout",
+    "successTitle": "Payment successful",
+    "successDesc": "Course access will appear in your account. Gifts were sent to the emails you provided.",
+    "goToCourses": "My courses",
+    "errors": {
+      "empty": "Cart is empty",
+      "gift_email": "Enter recipient email for the gift",
+      "invalid_promo": "Promo code is invalid or expired",
+      "checkout_failed": "Could not start checkout. Please try again."
+    }
   },
   "Brand": {
     "name": "Medoyid Club",
@@ -104,6 +133,9 @@
     "notSellableHint": "This course is still being prepared. Check back later.",
     "buyCourse": "Buy full course",
     "buyByModule": "Or buy by module",
+    "addToCart": "Add to cart",
+    "addModuleToCart": "Add to cart",
+    "goToCart": "Go to cart",
     "owned": "Unlocked",
     "statusLabel": "Status",
     "priceOnlineLabel": "Live cohort (online sessions)",
@@ -232,8 +264,31 @@
       "overview": "Overview",
       "profile": "Profile",
       "courses": "Courses",
+      "promoCodes": "Promo codes",
       "blog": "Blog",
       "videos": "Videos"
+    },
+    "promoCodes": {
+      "title": "Promo codes",
+      "subtitle": "Discounts for your courses at checkout",
+      "codeLabel": "Code",
+      "discountLabel": "Discount, %",
+      "maxRedemptionsLabel": "Usage limit",
+      "maxRedemptionsPlaceholder": "No limit",
+      "create": "Create promo code",
+      "created": "Promo code created",
+      "empty": "No promo codes yet",
+      "active": "Active",
+      "inactive": "Inactive",
+      "activate": "Activate",
+      "deactivate": "Deactivate",
+      "delete": "Delete",
+      "unlimited": "∞",
+      "stats": "−{discount}% · used {used} / {max}",
+      "errors": {
+        "invalid": "Check the code and discount percentage",
+        "duplicate": "This promo code already exists"
+      }
     },
     "translate": {
       "translateEmpty": "Translate empty fields",

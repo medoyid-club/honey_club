@@ -7,7 +7,36 @@
     "start": "Начать учиться",
     "account": "Личный кабинет",
     "studio": "Студия",
-    "admin": "Админ"
+    "admin": "Админ",
+    "menu": "Меню",
+    "openMenu": "Открыть меню",
+    "closeMenu": "Закрыть меню",
+    "cart": "Корзина"
+  },
+  "Cart": {
+    "title": "Корзина",
+    "subtitle": "Проверьте позиции перед оплатой",
+    "empty": "Корзина пуста",
+    "browseCourses": "Смотреть курсы",
+    "added": "Товар добавлен в корзину",
+    "cancelled": "Оплата отменена",
+    "free": "Бесплатно",
+    "giftLabel": "Подарить доступ",
+    "giftEmail": "E-mail получателя",
+    "saveGift": "Сохранить",
+    "remove": "Удалить",
+    "promoCode": "Промокод",
+    "subtotal": "Подитог",
+    "checkout": "Перейти к оплате",
+    "successTitle": "Оплата прошла успешно",
+    "successDesc": "Доступ к курсам появится в личном кабинете. Подарки отправлены на указанные e-mail.",
+    "goToCourses": "Мои курсы",
+    "errors": {
+      "empty": "Корзина пуста",
+      "gift_email": "Укажите e-mail получателя для подарка",
+      "invalid_promo": "Промокод недействителен или истёк",
+      "checkout_failed": "Не удалось оформить заказ. Попробуйте снова."
+    }
   },
   "Brand": {
     "name": "Клуб медоедов",
@@ -104,6 +133,9 @@
     "notSellableHint": "Курс ещё готовится. Загляните позже.",
     "buyCourse": "Купить весь курс",
     "buyByModule": "Или по модулям",
+    "addToCart": "В корзину",
+    "addModuleToCart": "В корзину",
+    "goToCart": "Перейти в корзину",
     "owned": "Доступно",
     "statusLabel": "Статус",
     "priceOnlineLabel": "Онлайн-поток (живые занятия)",
@@ -232,8 +264,31 @@
       "overview": "Обзор",
       "profile": "Профиль",
       "courses": "Курсы",
+      "promoCodes": "Промокоды",
       "blog": "Блог",
       "videos": "Видео"
+    },
+    "promoCodes": {
+      "title": "Промокоды",
+      "subtitle": "Скидки для ваших курсов в корзине покупателя",
+      "codeLabel": "Код",
+      "discountLabel": "Скидка, %",
+      "maxRedemptionsLabel": "Лимит использований",
+      "maxRedemptionsPlaceholder": "Без лимита",
+      "create": "Создать промокод",
+      "created": "Промокод создан",
+      "empty": "Промокодов пока нет",
+      "active": "Активен",
+      "inactive": "Выключен",
+      "activate": "Включить",
+      "deactivate": "Выключить",
+      "delete": "Удалить",
+      "unlimited": "∞",
+      "stats": "−{discount}% · использовано {used} / {max}",
+      "errors": {
+        "invalid": "Проверьте код и процент скидки",
+        "duplicate": "Такой промокод уже существует"
+      }
     },
     "translate": {
       "translateEmpty": "Перевести пустые поля",

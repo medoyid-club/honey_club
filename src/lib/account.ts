@@ -76,28 +76,47 @@ export function initials(profile: UserProfile): string {
 
 export async function getUserEnrollments(
   userId: string,
-  locale: Locale
+  locale: Locale,
+  email?: string
 ): Promise<EnrolledCourse[]> {
   const supabase = await createClient();
-  const { data } = await supabase
+
+  let query = supabase
     .from("enrollments")
     .select(
-      "created_at, payment_status, courses(*, author_pages(slug, avatar_url, display_name))"
+      "created_at, payment_status, scope, courses(*, author_pages(slug, avatar_url, display_name))"
     )
-    .eq("user_id", userId)
     .in("payment_status", ["free", "paid"])
     .order("created_at", { ascending: false });
 
+  if (email) {
+    query = query.or(
+      `user_id.eq.${userId},and(is_gift.eq.true,gift_recipient_email.ilike.${email})`
+    );
+  } else {
+    query = query.eq("user_id", userId);
+  }
+
+  const { data } = await query;
+
   if (!data) return [];
 
-  return data
-    .filter((row) => row.courses && !Array.isArray(row.courses))
-    .map((row) => {
-      const course = mapCourse(row.courses as unknown as DbCourseRow, locale);
-      return {
-        ...course,
-        enrolledAt: row.created_at as string,
-        paymentStatus: row.payment_status as EnrolledCourse["paymentStatus"],
-      };
-    });
+  const byCourse = new Map<string, EnrolledCourse>();
+
+  for (const row of data) {
+    if (!row.courses || Array.isArray(row.courses)) continue;
+    const courseId = (row.courses as { id: string }).id;
+    const existing = byCourse.get(courseId);
+    const course = mapCourse(row.courses as unknown as DbCourseRow, locale);
+    const entry: EnrolledCourse = {
+      ...course,
+      enrolledAt: row.created_at as string,
+      paymentStatus: row.payment_status as EnrolledCourse["paymentStatus"],
+    };
+    if (!existing || row.scope !== "module") {
+      byCourse.set(courseId, entry);
+    }
+  }
+
+  return [...byCourse.values()];
 }

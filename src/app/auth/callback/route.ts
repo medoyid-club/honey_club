@@ -1,6 +1,8 @@
 import { type NextRequest, NextResponse } from "next/server";
 
 import { createClient } from "@/lib/supabase/server";
+import { claimPendingGifts } from "@/lib/orders/fulfill";
+import { createServiceClient } from "@/lib/supabase/service";
 
 export async function GET(request: NextRequest) {
   const { searchParams, origin } = new URL(request.url);
@@ -12,8 +14,13 @@ export async function GET(request: NextRequest) {
     const { error } = await supabase.auth.exchangeCodeForSession(code);
 
     if (!error) {
-      // Behind Vercel's proxy the request origin is internal; prefer the
-      // forwarded host so the redirect lands on the public domain.
+      const { data: claimsData } = await supabase.auth.getClaims();
+      const user = claimsData?.claims;
+      if (user?.sub && user.email) {
+        const svc = createServiceClient();
+        await claimPendingGifts(svc, user.sub as string, user.email as string);
+      }
+
       const forwardedHost = request.headers.get("x-forwarded-host");
       const isLocalEnv = process.env.NODE_ENV === "development";
       const base =

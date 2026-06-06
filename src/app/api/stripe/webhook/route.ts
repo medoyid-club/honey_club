@@ -1,6 +1,7 @@
 import { type NextRequest, NextResponse } from "next/server";
 import type Stripe from "stripe";
 
+import { fulfillOrder } from "@/lib/orders/fulfill";
 import { getStripeClient } from "@/lib/stripe";
 import { createServiceClient } from "@/lib/supabase/service";
 
@@ -26,25 +27,29 @@ export async function POST(request: NextRequest) {
     if (session.payment_status === "paid") {
       const supabase = createServiceClient();
       const meta = session.metadata ?? {};
+      const orderId = meta.order_id;
 
-      const { data: updated } = await supabase
-        .from("enrollments")
-        .update({ payment_status: "paid", paid_at: new Date().toISOString() })
-        .eq("stripe_session_id", session.id)
-        .select("id");
+      if (orderId) {
+        await fulfillOrder(supabase, orderId, session.id);
+      } else {
+        const { data: updated } = await supabase
+          .from("enrollments")
+          .update({ payment_status: "paid", paid_at: new Date().toISOString() })
+          .eq("stripe_session_id", session.id)
+          .select("id");
 
-      // Fallback: pending row missing — reconstruct from metadata.
-      if ((!updated || updated.length === 0) && meta.user_id && meta.course_id) {
-        await supabase.from("enrollments").insert({
-          user_id: meta.user_id,
-          course_id: meta.course_id,
-          module_id: meta.scope === "module" ? meta.module_id || null : null,
-          scope: meta.scope === "module" ? "module" : "course",
-          pricing_mode: meta.pricing_mode || null,
-          payment_status: "paid",
-          stripe_session_id: session.id,
-          paid_at: new Date().toISOString(),
-        });
+        if ((!updated || updated.length === 0) && meta.user_id && meta.course_id) {
+          await supabase.from("enrollments").insert({
+            user_id: meta.user_id,
+            course_id: meta.course_id,
+            module_id: meta.scope === "module" ? meta.module_id || null : null,
+            scope: meta.scope === "module" ? "module" : "course",
+            pricing_mode: meta.pricing_mode || null,
+            payment_status: "paid",
+            stripe_session_id: session.id,
+            paid_at: new Date().toISOString(),
+          });
+        }
       }
     }
   }

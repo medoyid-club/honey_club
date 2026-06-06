@@ -6,12 +6,13 @@ import { Link } from "@/i18n/navigation";
 import { displayName, getUserProfile } from "@/lib/account";
 import { createClient } from "@/lib/supabase/server";
 
-export async function UserAuth() {
+export async function UserAuth({ variant = "header" }: { variant?: "header" | "mobile" }) {
   const supabase = await createClient();
   const { data } = await supabase.auth.getClaims();
   const user = data?.claims ?? null;
 
   const tNav = await getTranslations("Nav");
+  const mobile = variant === "mobile";
 
   if (user) {
     const profile = await getUserProfile(
@@ -20,6 +21,42 @@ export async function UserAuth() {
     );
 
     const isCreator = profile.role === "author" || profile.role === "admin";
+
+    if (mobile) {
+      return (
+        <div className="flex flex-col gap-2">
+          <Button
+            variant="outline"
+            nativeButton={false}
+            className="w-full justify-start gap-2"
+            render={<Link href="/account" />}
+          >
+            <UserAvatar profile={profile} size="sm" />
+            <span className="truncate">{displayName(profile)}</span>
+          </Button>
+          {isCreator && (
+            <Button
+              variant="ghost"
+              nativeButton={false}
+              className="w-full justify-start"
+              render={<Link href="/studio" />}
+            >
+              {tNav("studio")}
+            </Button>
+          )}
+          {profile.role === "admin" && (
+            <Button
+              variant="ghost"
+              nativeButton={false}
+              className="w-full justify-start"
+              render={<Link href="/admin" />}
+            >
+              {tNav("admin")}
+            </Button>
+          )}
+        </div>
+      );
+    }
 
     return (
       <div className="flex items-center gap-1">
@@ -61,10 +98,10 @@ export async function UserAuth() {
 
   return (
     <Button
-      variant="ghost"
+      variant={mobile ? "outline" : "ghost"}
       size="sm"
       nativeButton={false}
-      className="hidden sm:inline-flex"
+      className={mobile ? "w-full" : "hidden sm:inline-flex"}
       render={<Link href="/login" />}
     >
       {tNav("login")}

@@ -7,7 +7,36 @@
     "start": "Почати навчання",
     "account": "Особистий кабінет",
     "studio": "Студія",
-    "admin": "Адмін"
+    "admin": "Адмін",
+    "menu": "Меню",
+    "openMenu": "Відкрити меню",
+    "closeMenu": "Закрити меню",
+    "cart": "Кошик"
+  },
+  "Cart": {
+    "title": "Кошик",
+    "subtitle": "Перевірте позиції перед оплатою",
+    "empty": "Кошик порожній",
+    "browseCourses": "Дивитися курси",
+    "added": "Товар додано до кошика",
+    "cancelled": "Оплату скасовано",
+    "free": "Безкоштовно",
+    "giftLabel": "Подарувати доступ",
+    "giftEmail": "E-mail отримувача",
+    "saveGift": "Зберегти",
+    "remove": "Видалити",
+    "promoCode": "Промокод",
+    "subtotal": "Підсумок",
+    "checkout": "Перейти до оплати",
+    "successTitle": "Оплату успішно завершено",
+    "successDesc": "Доступ до курсів з’явиться в особистому кабінеті. Подарунки надіслано на вказані e-mail.",
+    "goToCourses": "Мої курси",
+    "errors": {
+      "empty": "Кошик порожній",
+      "gift_email": "Вкажіть e-mail отримувача для подарунка",
+      "invalid_promo": "Промокод недійсний або прострочений",
+      "checkout_failed": "Не вдалося оформити замовлення. Спробуйте ще раз."
+    }
   },
   "Brand": {
     "name": "Клуб Медоїдів",
@@ -104,6 +133,9 @@
     "notSellableHint": "Курс ще готується. Завітайте пізніше.",
     "buyCourse": "Купити весь курс",
     "buyByModule": "Або помодульно",
+    "addToCart": "До кошика",
+    "addModuleToCart": "До кошика",
+    "goToCart": "Перейти до кошика",
     "owned": "Доступно",
     "statusLabel": "Статус",
     "priceOnlineLabel": "Онлайн-потік (живі заняття)",
@@ -232,8 +264,31 @@
       "overview": "Огляд",
       "profile": "Профіль",
       "courses": "Курси",
+      "promoCodes": "Промокоди",
       "blog": "Блог",
       "videos": "Відео"
+    },
+    "promoCodes": {
+      "title": "Промокоди",
+      "subtitle": "Знижки для ваших курсів у кошику покупця",
+      "codeLabel": "Код",
+      "discountLabel": "Знижка, %",
+      "maxRedemptionsLabel": "Ліміт використань",
+      "maxRedemptionsPlaceholder": "Без ліміту",
+      "create": "Створити промокод",
+      "created": "Промокод створено",
+      "empty": "Промокодів поки немає",
+      "active": "Активний",
+      "inactive": "Вимкнено",
+      "activate": "Увімкнути",
+      "deactivate": "Вимкнути",
+      "delete": "Видалити",
+      "unlimited": "∞",
+      "stats": "−{discount}% · використано {used} / {max}",
+      "errors": {
+        "invalid": "Перевірте код і відсоток знижки",
+        "duplicate": "Такий промокод уже існує"
+      }
     },
     "translate": {
       "translateEmpty": "Перекласти порожні поля",

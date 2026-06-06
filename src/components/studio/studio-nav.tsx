@@ -4,6 +4,7 @@ import {
   BookOpen,
   LayoutDashboard,
   Newspaper,
+  Tag,
   UserCog,
   Video,
 } from "lucide-react";
@@ -16,6 +17,7 @@ const navItems = [
   { href: "/studio", labelKey: "overview", icon: LayoutDashboard, exact: true },
   { href: "/studio/profile", labelKey: "profile", icon: UserCog, exact: false },
   { href: "/studio/courses", labelKey: "courses", icon: BookOpen, exact: false },
+  { href: "/studio/promo-codes", labelKey: "promoCodes", icon: Tag, exact: false },
   { href: "/studio/blog", labelKey: "blog", icon: Newspaper, exact: false },
   { href: "/studio/videos", labelKey: "videos", icon: Video, exact: false },
 ] as const;

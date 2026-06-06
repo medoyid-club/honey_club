@@ -24,7 +24,7 @@ export default async function AccountCoursesPage({ params }: Props) {
   const { user } = await requireUser(locale);
   if (!user) return null;
 
-  const enrollments = await getUserEnrollments(user.id, locale as Locale);
+  const enrollments = await getUserEnrollments(user.id, locale as Locale, user.email);
   const t = await getTranslations("Account");
 
   return (

@@ -1,10 +1,7 @@
 import { Check } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 
-import {
-  createCheckoutSession,
-  enrollFree,
-} from "@/app/[locale]/courses/[slug]/actions";
+import { addToCart, enrollFree } from "@/app/[locale]/cart/actions";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -55,7 +52,6 @@ export async function EnrollCard({
   const pricing = activePricing(status, priceOnlineUsd, priceOfflineUsd);
   const owned = new Set(ownedModuleIds);
 
-  // Not sellable yet (draft).
   if (!pricing) {
     return (
       <Card>
@@ -117,13 +113,13 @@ export async function EnrollCard({
             </Button>
           </form>
         ) : (
-          <form action={createCheckoutSession}>
+          <form action={addToCart}>
             <input type="hidden" name="scope" value="course" />
             <input type="hidden" name="courseId" value={courseId} />
             <input type="hidden" name="locale" value={locale} />
             <input type="hidden" name="slug" value={slug} />
             <Button type="submit" className="w-full">
-              {t("buyCourse")} — {coursePriceLabel}
+              {t("addToCart")} — {coursePriceLabel}
             </Button>
           </form>
         )}
@@ -148,13 +144,14 @@ export async function EnrollCard({
                       {t("owned")}
                     </span>
                   ) : isLoggedIn ? (
-                    <form action={createCheckoutSession}>
+                    <form action={addToCart}>
                       <input type="hidden" name="scope" value="module" />
                       <input type="hidden" name="courseId" value={courseId} />
                       <input type="hidden" name="moduleId" value={m.id} />
                       <input type="hidden" name="locale" value={locale} />
                       <input type="hidden" name="slug" value={slug} />
                       <Button type="submit" variant="outline" size="sm">
+                        {t("addModuleToCart")}{" "}
                         {price === 0 ? t("free") : formatPrice(price)}
                       </Button>
                     </form>
@@ -167,6 +164,17 @@ export async function EnrollCard({
               );
             })}
           </div>
+        )}
+
+        {isLoggedIn && !courseIsFree && (
+          <Button
+            nativeButton={false}
+            variant="outline"
+            className="w-full"
+            render={<Link href="/cart" />}
+          >
+            {t("goToCart")}
+          </Button>
         )}
       </CardContent>
 

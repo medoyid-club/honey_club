@@ -153,7 +153,12 @@ export default async function CoursePage({ params, searchParams }: Props) {
   const authed = await createClient();
   const { data: claimsData } = await authed.auth.getClaims();
   const user = claimsData?.claims ?? null;
-  const access = await getCourseAccess(authed, user?.sub as string | undefined, course.id);
+  const access = await getCourseAccess(
+    authed,
+    user?.sub as string | undefined,
+    course.id,
+    (user?.email as string | undefined) ?? null
+  );
 
   const formatLabels = {
     course: t("formatCourse"),

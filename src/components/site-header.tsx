@@ -1,8 +1,10 @@
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { Suspense } from "react";
 
+import { CartLink } from "@/components/cart-link";
 import { LanguageSwitcher } from "@/components/language-switcher";
 import { SiteLogo } from "@/components/site-logo";
+import { SiteMobileNav } from "@/components/site-mobile-nav";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { UserAuth, UserAuthFallback } from "@/components/user-auth";
 import { Button } from "@/components/ui/button";
@@ -10,6 +12,7 @@ import { Link } from "@/i18n/navigation";
 
 export function SiteHeader() {
   const t = useTranslations("Nav");
+  const locale = useLocale();
 
   const navItems = [
     { href: "/courses", label: t("courses") },
@@ -35,14 +38,40 @@ export function SiteHeader() {
         </nav>
 
         <div className="flex items-center gap-2">
-          <LanguageSwitcher />
-          <ThemeToggle />
-          <Suspense fallback={<UserAuthFallback />}>
-            <UserAuth />
-          </Suspense>
-          <Button nativeButton={false} size="sm" className="honey-glow-sm" render={<Link href="/courses" />}>
-            {t("start")}
-          </Button>
+          <div className="hidden items-center gap-2 sm:flex">
+            <Suspense
+              fallback={
+                <span className="inline-flex size-9 items-center justify-center rounded-lg bg-muted/40" />
+              }
+            >
+              <CartLink locale={locale} />
+            </Suspense>
+            <LanguageSwitcher />
+            <ThemeToggle />
+            <Suspense fallback={<UserAuthFallback />}>
+              <UserAuth />
+            </Suspense>
+            <Button
+              nativeButton={false}
+              size="sm"
+              className="honey-glow-sm"
+              render={<Link href="/courses" />}
+            >
+              {t("start")}
+            </Button>
+          </div>
+
+          <SiteMobileNav
+            authSlot={
+              <Suspense
+                fallback={
+                  <div className="h-9 w-full animate-pulse rounded-md bg-muted/40" />
+                }
+              >
+                <UserAuth variant="mobile" />
+              </Suspense>
+            }
+          />
         </div>
       </div>
     </header>
