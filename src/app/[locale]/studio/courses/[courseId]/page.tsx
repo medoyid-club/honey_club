@@ -82,21 +82,29 @@ export default async function StudioCourseEditorPage({
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between gap-3">
         <Link
           href="/studio/courses"
           className="text-sm text-muted-foreground hover:text-foreground"
         >
           {t("back")}
         </Link>
-        {course.published && (
+        <div className="flex flex-wrap items-center gap-4">
           <Link
-            href={`/courses/${course.slug}`}
+            href={`/studio/courses/${course.id}/ads-pack`}
             className="text-sm text-primary hover:underline"
           >
-            {t("viewPublic")}
+            {t("adsPack")}
           </Link>
-        )}
+          {course.published && (
+            <Link
+              href={`/courses/${course.slug}`}
+              className="text-sm text-primary hover:underline"
+            >
+              {t("viewPublic")}
+            </Link>
+          )}
+        </div>
       </div>
 
       {saved && (
