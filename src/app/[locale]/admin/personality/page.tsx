@@ -1,5 +1,6 @@
 import { getTranslations, setRequestLocale } from "next-intl/server";
 
+import { PersonalityPlayground } from "@/components/personality/personality-playground";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -31,6 +32,10 @@ export default async function AdminPersonalityPage({ params }: Props) {
           <p className="mt-1 text-muted-foreground">{t("variantABody")}</p>
         </div>
       </header>
+
+      <PersonalityPlayground />
+
+      <hr className="border-foreground/10" />
 
       <section className="space-y-4">
         <div>

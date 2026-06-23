@@ -1,7 +1,7 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { TraitBar } from "@/components/personality/trait-bar";
 import { Badge } from "@/components/ui/badge";
@@ -14,6 +14,11 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
+import {
+  PERSONALITY_DEMO_EVENT,
+  buildAxesFromDemo,
+  readDemoState,
+} from "@/lib/personality/demo-state";
 import {
   AXIS_KEYS,
   GOAL_IDS,
@@ -39,12 +44,46 @@ export function HoneyClubLab() {
   const [classB, setClassB] = useState<RadicalId>("shizoid");
   const [itemId, setItemId] = useState<ItemId>("none");
   const [goalId, setGoalId] = useState<GoalId>("work");
+  const [useMyProfile, setUseMyProfile] = useState(false);
+  const [profileAxes, setProfileAxes] = useState<ReturnType<typeof buildAxesFromDemo>>(null);
+
+  useEffect(() => {
+    const sync = () => {
+      const demo = readDemoState();
+      const axes = buildAxesFromDemo(demo);
+      setProfileAxes(axes);
+      if (useMyProfile && demo.radicalId) {
+        setClassA(demo.radicalId);
+        if (demo.equippedArtifact !== "none") {
+          setItemId(demo.equippedArtifact);
+        }
+      }
+    };
+    sync();
+    window.addEventListener("storage", sync);
+    window.addEventListener(PERSONALITY_DEMO_EVENT, sync);
+    return () => {
+      window.removeEventListener("storage", sync);
+      window.removeEventListener(PERSONALITY_DEMO_EVENT, sync);
+    };
+  }, [useMyProfile]);
+
+  const toggleMyProfile = () => {
+    const next = !useMyProfile;
+    setUseMyProfile(next);
+    if (next) {
+      const demo = readDemoState();
+      if (demo.radicalId) setClassA(demo.radicalId);
+      if (demo.equippedArtifact !== "none") setItemId(demo.equippedArtifact);
+    }
+  };
 
   const radA = getRadicalById(classA);
+  const displayAxes = useMyProfile && profileAxes ? profileAxes : radA.axes;
   const radB = getRadicalById(classB);
   const item = getItemById(itemId);
-  const stats = computeStats(radA.axes, item);
-  const syn = computeSynergy(radA.axes, radB.axes);
+  const stats = computeStats(displayAxes, item);
+  const syn = computeSynergy(displayAxes, radB.axes);
   const goalKeys = GOAL_SYN_KEYS[goalId];
 
   return (
@@ -61,6 +100,7 @@ export function HoneyClubLab() {
             <select
               id="radical-a"
               value={classA}
+              disabled={useMyProfile}
               onChange={(e) => setClassA(e.target.value as RadicalId)}
               className="w-full min-w-[200px] rounded-md border border-input bg-background px-3 py-2 text-sm outline-none ring-offset-background focus-visible:ring-2 focus-visible:ring-ring"
             >
@@ -77,6 +117,7 @@ export function HoneyClubLab() {
             <select
               id="artifact"
               value={itemId}
+              disabled={useMyProfile}
               onChange={(e) => setItemId(e.target.value as ItemId)}
               className="w-full min-w-[200px] rounded-md border border-input bg-background px-3 py-2 text-sm outline-none ring-offset-background focus-visible:ring-2 focus-visible:ring-ring"
             >
@@ -93,6 +134,21 @@ export function HoneyClubLab() {
           </p>
         </div>
 
+        <div className="flex flex-wrap items-center gap-3">
+          <Button
+            type="button"
+            size="sm"
+            variant={useMyProfile ? "default" : "outline"}
+            disabled={!profileAxes}
+            onClick={toggleMyProfile}
+          >
+            {t("useMyProfile")}
+          </Button>
+          {!profileAxes && (
+            <p className="text-xs text-muted-foreground">{t("useMyProfileHint")}</p>
+          )}
+        </div>
+
         <div className="grid gap-4 lg:grid-cols-2">
           <Card>
             <CardHeader>
@@ -104,7 +160,7 @@ export function HoneyClubLab() {
                 <TraitBar
                   key={key}
                   label={t(`axes.${key}`)}
-                  value={radA.axes[key]}
+                  value={displayAxes[key]}
                 />
               ))}
             </CardContent>
