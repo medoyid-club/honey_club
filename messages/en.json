@@ -453,6 +453,13 @@
   "Admin": {
     "title": "Administration",
     "subtitle": "Users, roles, and author invites.",
+    "sidebarHint": "Internal team tools.",
+    "internalBadge": "Admins only",
+    "nav": {
+      "overview": "Users",
+      "personality": "Personality profile",
+      "honeyClub": "Honey Club"
+    },
     "inviteSent": "Invite sent to {email}.",
     "inviteCreated": "Invite created for {email} (email not sent).",
     "inviteLink": "Acceptance link",
@@ -475,6 +482,177 @@
       "admin": "Admin"
     },
     "apply": "Apply"
+  },
+  "AdminPersonality": {
+    "title": "Personality profile",
+    "subtitle": "Layered profile concept for Medoyid Club: how we store traits, states, and interactions — without diagnoses or verdicts.",
+    "variantATitle": "Variant A — mirror game",
+    "variantABody": "The platform does not diagnose or advise. It shows a game projection and observations — people make their own decisions.",
+    "formulaTitle": "Architecture formula",
+    "formula": "Immutable tests → flat trait vector → state stream → visual layers",
+    "formulaDesc": "Tests are protocols for filling the profile. Labels (“hyperthymic”, “ENFP”) are computed from numbers, not stored as truth.",
+    "layersTitle": "Layered profile",
+    "layersSubtitle": "Each layer changes at a different speed — separate data with separate access rules.",
+    "speed": {
+      "slow": "slow",
+      "medium": "medium",
+      "fast": "fast"
+    },
+    "profileLayers": {
+      "traits": {
+        "title": "Base traits (Big Five)",
+        "desc": "Bottom layer — almost static",
+        "example": "Openness, conscientiousness, extraversion — foundation for all calculations."
+      },
+      "radicals": {
+        "title": "Radicals",
+        "desc": "Middle layer — character types",
+        "example": "Histrionic, hyperthymic, schizoid — composite “hadrons” from traits, computed on the fly."
+      },
+      "cognitive": {
+        "title": "Cognitive style",
+        "desc": "Middle layer — thinking patterns",
+        "example": "MBTI-like axes as another protocol for the same vector."
+      },
+      "state": {
+        "title": "Current state",
+        "desc": "Top layer — energy, mood, stress",
+        "example": "Separate check-in stream, not a static profile field."
+      },
+      "roles": {
+        "title": "Social roles",
+        "desc": "Top layer — interaction context",
+        "example": "Friendship, work, relationships — goal mode shifts synergy weights."
+      }
+    },
+    "principlesTitle": "Principles",
+    "principles": {
+      "1": "Raw data is immutable: each test run is an immutable record.",
+      "2": "Value is in graph edges, not nodes: compatibility is a per-layer vector, not one number.",
+      "3": "Courses feed the profile: lesson → test → new layer → next course recommendation.",
+      "4": "Dark matter is honest uncertainty, not hidden magic."
+    },
+    "horizonsTitle": "Development horizons",
+    "horizonsSubtitle": "Phased path from MVP to social RPG.",
+    "horizons": {
+      "learning": {
+        "title": "Horizon 1 · Profile as learning artifact",
+        "subtitle": "MVP",
+        "body": "Big Five test, layered profile “stack”, empty layers as progression through courses."
+      },
+      "edges": {
+        "title": "Horizon 2 · Interactions as data",
+        "subtitle": "Synergy",
+        "body": "Per-layer compatibility, message translator as hypothesis, communication trainer."
+      },
+      "teams": {
+        "title": "Horizon 3 · Teams and map",
+        "subtitle": "Social layer",
+        "body": "Team composition, pseudo-locations, quests as activities affecting progression."
+      },
+      "events": {
+        "title": "Horizon 4 · Event typing",
+        "subtitle": "Event sourcing",
+        "body": "Daily events change only state; rare events may shift traits."
+      }
+    },
+    "ctaTitle": "Try the engine",
+    "ctaBody": "Interactive prototype: pick a radical, artifact, and second character — see stats and synergy profile in real time.",
+    "ctaButton": "Open Honey Club"
+  },
+  "AdminHoneyClub": {
+    "title": "Honey Club — social RPG engine",
+    "subtitle": "Live prototype: radical → game stats → synergy between people. Numbers are formula-driven.",
+    "variantATitle": "Variant A — mirror game",
+    "variantABody": "No diagnoses, no advice, no verdicts — only game projection and observations.",
+    "architectureTitle": "Architecture: from “particles” to engine",
+    "architectureSubtitle": "Universal model defines ontology; layer pipeline turns type into game.",
+    "tableParticle": "Model layer",
+    "tableRole": "Engine role",
+    "tableChange": "Changes",
+    "particles": {
+      "quarks": { "name": "Quarks", "role": "Class / radical (input)", "change": "almost never" },
+      "leptons": { "name": "Leptons", "role": "Current status, buffs", "change": "fast" },
+      "bosons": { "name": "Bosons", "role": "Synergy engine — core", "change": "—" },
+      "fields": { "name": "Fields", "role": "Context + courses", "change": "medium" },
+      "darkMatter": { "name": "Dark matter", "role": "Latent + uncertainty", "change": "—" },
+      "time": { "name": "Time", "role": "Progression and stat decay", "change": "ongoing" }
+    },
+    "pipelineTitle": "Layer pipeline",
+    "pipeline": {
+      "typology": "Typology",
+      "stats": "Stats",
+      "synergy": "Synergy",
+      "context": "Context",
+      "progression": "Progression",
+      "game": "Game"
+    },
+    "pipelineHint": "Highlighted layers are already computed live in this prototype.",
+    "labTitle": "Character lab",
+    "labSubtitle": "Pick a class and artifact — stats recalculate from formulas.",
+    "radicalLabel": "Class (radical)",
+    "artifactLabel": "Artifact",
+    "axesTitle": "Base axes",
+    "axesDesc": "Quarks — model input",
+    "statsTitle": "Game stats",
+    "statsDesc": "Derived from axes + artifact modifiers",
+    "synergyTitle": "Synergy engine",
+    "synergySubtitle": "Lab character ({name}) + second participant",
+    "partnerLabel": "Second character",
+    "goalLabel": "Goal mode",
+    "goals": {
+      "work": "Work",
+      "friendship": "Friendship",
+      "relationship": "Relationships"
+    },
+    "axes": {
+      "ext": "Extraversion",
+      "opn": "Openness",
+      "con": "Conscientiousness",
+      "agr": "Cooperativeness",
+      "sta": "Emotional stability",
+      "dom": "Dominance",
+      "rec": "Need for recognition",
+      "enr": "Energy / pace"
+    },
+    "stats": {
+      "intellect": "Intellect",
+      "charisma": "Magic attack · charisma",
+      "pressure": "Physical attack · pressure",
+      "armor": "Armor · vs criticism",
+      "ward": "Magic defense · vs rationality",
+      "vitality": "Vitality",
+      "agility": "Agility · social flexibility",
+      "initiative": "Initiative"
+    },
+    "synergy": {
+      "creativity": "Pair creativity",
+      "tempo": "Pace / drive",
+      "stability": "Routine stability",
+      "empathy": "Empathy / warmth",
+      "complement": "Complementarity",
+      "conflict": "Friction risk"
+    },
+    "radicals": {
+      "isteroid": { "name": "Histrionic", "tagline": "Stage, attention, vivid presentation" },
+      "gipertim": { "name": "Hyperthymic", "tagline": "Drive, optimism, starting processes" },
+      "shizoid": { "name": "Schizoid", "tagline": "Ideas, nonconformity, inner world" },
+      "epileptoid": { "name": "Epileptoid", "tagline": "Structure, order, control" },
+      "paranoyal": { "name": "Paranoidal", "tagline": "Goal, will, moving to results" },
+      "emotiv": { "name": "Emotive", "tagline": "Sensitivity, empathy, care" },
+      "trevozhny": { "name": "Anxious", "tagline": "Caution, responsibility, support" }
+    },
+    "items": {
+      "none": "— no artifact —",
+      "plato": "Plato's Cloak",
+      "aristotle": "Aristotle's Ring",
+      "dionysus": "Dionysus Mask",
+      "stoic": "Stoic Shield"
+    },
+    "observationTitle": "Observation · “{goal}” mode",
+    "observationBody": "Most salient for this goal: {metrics}. Watch friction risk: {conflict}.",
+    "observationDisclaimer": "This is a game observation, not advice or a judgment of people.",
+    "footnote": "Illustrative model (Ponomarenko radicals × Big Five). Weights are hypotheses for calibration. Not a diagnostic tool."
   },
   "AuthorInvite": {
     "title": "Become an author",
