@@ -458,7 +458,8 @@
     "nav": {
       "overview": "Користувачі",
       "personality": "Профіль особистості",
-      "honeyClub": "Honey Club"
+      "honeyClub": "Honey Club",
+      "cosmos": "RPG-проєкт"
     },
     "inviteSent": "Запрошення надіслано на {email}.",
     "inviteCreated": "Запрошення створено для {email} (лист не надіслано).",
@@ -481,7 +482,22 @@
       "author": "Автор",
       "admin": "Адмін"
     },
-    "apply": "Застосувати"
+    "apply": "Застосувати",
+    "cosmosNav": {
+      "backToAdmin": "← Адмінка",
+      "hub": "Огляд",
+      "roadmap": "Roadmap",
+      "businessModel": "Business Model Canvas"
+    },
+    "cosmosHub": {
+      "title": "RPG «Умовний космос»",
+      "description": "Внутрішні документи підготовки до розробки гри. Курси Honey Club — окремий контур.",
+      "roadmapTitle": "План розробки",
+      "roadmapHint": "Gantt-діаграма на 6 тижнів",
+      "bmcTitle": "Business Model Canvas",
+      "bmcHint": "9 блоків Osterwalder",
+      "storageNote": "Дані зберігаються локально у браузері."
+    }
   },
   "AdminPersonality": {
     "title": "Профіль особистості",

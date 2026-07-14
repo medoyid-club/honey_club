@@ -458,7 +458,8 @@
     "nav": {
       "overview": "Users",
       "personality": "Personality profile",
-      "honeyClub": "Honey Club"
+      "honeyClub": "Honey Club",
+      "cosmos": "RPG project"
     },
     "inviteSent": "Invite sent to {email}.",
     "inviteCreated": "Invite created for {email} (email not sent).",
@@ -481,7 +482,22 @@
       "author": "Author",
       "admin": "Admin"
     },
-    "apply": "Apply"
+    "apply": "Apply",
+    "cosmosNav": {
+      "backToAdmin": "← Admin",
+      "hub": "Overview",
+      "roadmap": "Roadmap",
+      "businessModel": "Business Model Canvas"
+    },
+    "cosmosHub": {
+      "title": "RPG \"Conditional Cosmos\"",
+      "description": "Internal game development prep documents. Honey Club courses are a separate track. Edits are saved in your browser (localStorage).",
+      "roadmapTitle": "Development plan",
+      "roadmapHint": "6-week Gantt: design, TWM, PoC, launch",
+      "bmcTitle": "Business Model Canvas",
+      "bmcHint": "Osterwalder's 9 blocks: segments, value, ethical monetization",
+      "storageNote": "Data is stored locally in your browser. Team-wide sync will need a backend later."
+    }
   },
   "AdminPersonality": {
     "title": "Personality profile",
@@ -786,5 +802,77 @@
     "toStudio": "Go to studio",
     "mismatchTitle": "Different email",
     "mismatchText": "The invite was sent to {email}. Sign in with that address."
+  },
+  "Cosmos": {
+    "nav": {
+      "sandbox": "UI Sandbox",
+      "prototype": "Prototype",
+      "roadmap": "Roadmap",
+      "businessModel": "Business Model Canvas"
+    },
+    "sandboxLinks": {
+      "cosmosTitle": "Conditional Cosmos",
+      "cosmosHint": "interactive game loop prototype: home / travel / integration",
+      "roadmapTitle": "RPG Roadmap",
+      "roadmapHint": "graphical Gantt chart for game prep (6 weeks)",
+      "bmcTitle": "Business Model Canvas",
+      "bmcHint": "RPG business model: segments, value, ethical monetization"
+    },
+    "prototypePage": {
+      "title": "Conditional Cosmos: prototype",
+      "description": "Interactive model of the game loop: home (full ecology, recovery) ↔ travel (narrow membrane, events) ↔ return (Tree integrates experience). Data lives in localStorage, no backend.",
+      "roadmapLink": "Development plan",
+      "roadmapHint": "Gantt chart for RPG prep (6 weeks, courses separate)",
+      "bmcLink": "Business Model Canvas",
+      "bmcHint": "one-page game business model: 9 blocks, ethical monetization"
+    },
+    "roadmapPage": {
+      "title": "Development preparation plan",
+      "description": "Six-week roadmap for the Conditional Cosmos RPG strategy (Jul 13 — Aug 23, 2026). Honey Club courses are a separate track; this covers the game only."
+    },
+    "bmcPage": {
+      "title": "Business Model Canvas",
+      "description": "One-page business model for the Conditional Cosmos RPG (Osterwalder's 9 blocks). Honey Club courses are separate. Linked to roadmap tasks b1–b3 on the",
+      "roadmapLink": "roadmap"
+    },
+    "roadmap": {
+      "edit": "Edit",
+      "doneEdit": "Done",
+      "reset": "Reset to defaults",
+      "daysShort": "d",
+      "selectedTask": "Selected task",
+      "todayPlan": "Today's plan",
+      "fieldTitle": "Title",
+      "fieldDays": "Duration (days)",
+      "fieldSection": "Section",
+      "fieldMilestone": "Milestone",
+      "deleteTask": "Delete task",
+      "milestone": "milestone",
+      "noTasksToday": "No active tasks on the chart today.",
+      "outOfRange": "Today's date is outside the plan window.",
+      "contextTitle": "Context",
+      "contextBody": "Prep plan for the Conditional Cosmos RPG: three streams start in parallel (market, design, TWM). Honey Club courses are not included. The \"Start development\" milestone follows the PoC (Gates + first Tree).",
+      "todayProgress": "Today ({date}): day {day} of {total}",
+      "newTaskTitle": "New task"
+    },
+    "bmc": {
+      "edit": "Edit",
+      "doneEdit": "Done",
+      "reset": "Reset to defaults",
+      "moreItems": "+{count} items",
+      "addItem": "Add",
+      "deleteItem": "Delete",
+      "blockLinks": "Block links",
+      "pickBlockForLinks": "Select another block to see links.",
+      "statusLegend": "Status legend",
+      "statusHypothesis": "hypothesis",
+      "statusValidated": "validated",
+      "statusDeferred": "later",
+      "legendHypothesis": "to validate in roadmap tasks b1–b3",
+      "legendValidated": "principle or artifact already exists",
+      "legendDeferred": "after PoC / MVP",
+      "updated": "updated",
+      "newItemText": "New item"
+    }
   }
 }

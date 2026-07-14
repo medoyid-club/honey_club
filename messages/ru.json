@@ -458,7 +458,8 @@
     "nav": {
       "overview": "Пользователи",
       "personality": "Профиль личности",
-      "honeyClub": "Honey Club"
+      "honeyClub": "Honey Club",
+      "cosmos": "RPG-проект"
     },
     "inviteSent": "Приглашение отправлено на {email}.",
     "inviteCreated": "Приглашение создано для {email} (письмо не отправлено).",
@@ -481,7 +482,22 @@
       "author": "Автор",
       "admin": "Админ"
     },
-    "apply": "Применить"
+    "apply": "Применить",
+    "cosmosNav": {
+      "backToAdmin": "← Админка",
+      "hub": "Обзор",
+      "roadmap": "Roadmap",
+      "businessModel": "Business Model Canvas"
+    },
+    "cosmosHub": {
+      "title": "RPG «Условный космос»",
+      "description": "Внутренние документы подготовки к разработке игры. Курсы Honey Club — отдельный контур. Редактирование сохраняется в браузере (localStorage).",
+      "roadmapTitle": "План разработки",
+      "roadmapHint": "Gantt-диаграмма на 6 недель: дизайн, TWM, PoC, запуск",
+      "bmcTitle": "Business Model Canvas",
+      "bmcHint": "9 блоков Osterwalder: сегменты, ценность, этичная монетизация",
+      "storageNote": "Данные хранятся локально в вашем браузере. Для общей команды понадобится синхронизация через backend — позже."
+    }
   },
   "AdminPersonality": {
     "title": "Профиль личности",
@@ -805,5 +821,77 @@
     "toStudio": "Перейти в студию",
     "mismatchTitle": "Другой email",
     "mismatchText": "Приглашение отправлено на {email}. Войдите под этим адресом."
+  },
+  "Cosmos": {
+    "nav": {
+      "sandbox": "UI Sandbox",
+      "prototype": "Прототип",
+      "roadmap": "Roadmap",
+      "businessModel": "Business Model Canvas"
+    },
+    "sandboxLinks": {
+      "cosmosTitle": "Условный космос",
+      "cosmosHint": "интерактивный прототип игрового цикла: дом / путешествие / интеграция",
+      "roadmapTitle": "Roadmap RPG",
+      "roadmapHint": "графический Gantt плана подготовки к разработке игры",
+      "bmcTitle": "Business Model Canvas",
+      "bmcHint": "бизнес-модель RPG: сегменты, ценность, этичная монетизация"
+    },
+    "prototypePage": {
+      "title": "Условный космос: прототип",
+      "description": "Интерактивная модель игрового цикла: дом (полная экология, восстановление) ↔ путешествие (узкая мембрана, события) ↔ возвращение (интеграция опыта Деревом). Данные живут в localStorage, бэкенда нет.",
+      "roadmapLink": "План разработки",
+      "roadmapHint": "Gantt-диаграмма подготовки к разработке RPG (6 недель, курсы отдельно)",
+      "bmcLink": "Business Model Canvas",
+      "bmcHint": "одностраничная бизнес-модель игры: 9 блоков, этичная монетизация"
+    },
+    "roadmapPage": {
+      "title": "План подготовки к разработке",
+      "description": "Шестинедельный roadmap RPG-стратегии «Условный космос» (13 июля — 23 августа 2026). Платформа курсов Honey Club — отдельный контур; здесь только игра."
+    },
+    "bmcPage": {
+      "title": "Business Model Canvas",
+      "description": "Одностраничная бизнес-модель RPG «Условный космос» (9 блоков Osterwalder). Курсы Honey Club — отдельно. Связано с задачами b1–b3 на",
+      "roadmapLink": "roadmap"
+    },
+    "roadmap": {
+      "edit": "Редактировать",
+      "doneEdit": "Готово",
+      "reset": "Сбросить к умолчанию",
+      "daysShort": "дн.",
+      "selectedTask": "Выбранная задача",
+      "todayPlan": "Сегодня на плане",
+      "fieldTitle": "Название",
+      "fieldDays": "Длительность (дней)",
+      "fieldSection": "Секция",
+      "fieldMilestone": "Веха",
+      "deleteTask": "Удалить задачу",
+      "milestone": "веха",
+      "noTasksToday": "Сегодня нет активных задач на диаграмме.",
+      "outOfRange": "Сегодняшняя дата вне окна плана.",
+      "contextTitle": "Контекст",
+      "contextBody": "План подготовки к разработке RPG «Условный космос»: три потока стартуют параллельно (анализ, дизайн, TWM). Курсы Honey Club в этот план не входят. Веха «Запуск разработки» привязана к PoC (Врата + первое Древо).",
+      "todayProgress": "Сегодня ({date}): день {day} из {total}",
+      "newTaskTitle": "Новая задача"
+    },
+    "bmc": {
+      "edit": "Редактировать",
+      "doneEdit": "Готово",
+      "reset": "Сбросить к умолчанию",
+      "moreItems": "+{count} пунктов",
+      "addItem": "Добавить",
+      "deleteItem": "Удалить",
+      "blockLinks": "Связи блока",
+      "pickBlockForLinks": "Выберите другой блок для связей.",
+      "statusLegend": "Легенда статусов",
+      "statusHypothesis": "гипотеза",
+      "statusValidated": "зафиксировано",
+      "statusDeferred": "позже",
+      "legendHypothesis": "требует проверки на этапе b1–b3 roadmap",
+      "legendValidated": "принцип или артефакт уже есть",
+      "legendDeferred": "после PoC / MVP",
+      "updated": "обновлено",
+      "newItemText": "Новый пункт"
+    }
   }
 }

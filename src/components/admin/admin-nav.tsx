@@ -1,6 +1,6 @@
 "use client";
 
-import { Shield, Sparkles, Users } from "lucide-react";
+import { Orbit, Shield, Sparkles, Users } from "lucide-react";
 import { useTranslations } from "next-intl";
 
 import { Link, usePathname } from "@/i18n/navigation";
@@ -10,6 +10,7 @@ const navItems = [
   { href: "/admin", labelKey: "overview", icon: Users, exact: true },
   { href: "/admin/personality", labelKey: "personality", icon: Sparkles, exact: false },
   { href: "/admin/honey-club", labelKey: "honeyClub", icon: Shield, exact: false },
+  { href: "/admin/cosmos", labelKey: "cosmos", icon: Orbit, exact: false },
 ] as const;
 
 export function AdminNav() {

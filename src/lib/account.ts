@@ -1,6 +1,7 @@
 import type { Locale } from "@/i18n/routing";
 import { mapCourse, type Course, type DbCourseRow } from "@/lib/courses";
 import { createClient } from "@/lib/supabase/server";
+import { getSessionClaims } from "@/lib/supabase/session";
 
 export type UserRole = "user" | "author" | "admin";
 
@@ -21,7 +22,7 @@ export type EnrolledCourse = Course & {
 
 export async function requireUser(locale: string) {
   const supabase = await createClient();
-  const { data } = await supabase.auth.getClaims();
+  const { data } = await getSessionClaims(supabase);
   const claims = data?.claims ?? null;
 
   if (!claims?.sub) {

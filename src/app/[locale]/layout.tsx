@@ -2,12 +2,14 @@ import type { Metadata } from "next";
 import { IBM_Plex_Mono, IBM_Plex_Sans } from "next/font/google";
 import { NextIntlClientProvider, hasLocale } from "next-intl";
 import { getMessages, setRequestLocale } from "next-intl/server";
+import { headers } from "next/headers";
 import { notFound } from "next/navigation";
 import "../globals.css";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { ThemeProvider } from "@wrksz/themes/next";
 import { routing } from "@/i18n/routing";
+import { isSandboxPathname } from "@/lib/supabase/session";
 
 const ibmPlexSans = IBM_Plex_Sans({
   variable: "--font-ibm-plex-sans",
@@ -50,6 +52,8 @@ export default async function LocaleLayout({ children, params }: Props) {
 
   setRequestLocale(locale);
   const messages = await getMessages();
+  const pathname = (await headers()).get("x-pathname") ?? "";
+  const isSandbox = isSandboxPathname(pathname);
 
   return (
     <html
@@ -65,9 +69,15 @@ export default async function LocaleLayout({ children, params }: Props) {
             enableSystem
             disableTransitionOnChange
           >
-            <SiteHeader />
-            <main className="flex-1">{children}</main>
-            <SiteFooter />
+            {isSandbox ? (
+              children
+            ) : (
+              <>
+                <SiteHeader />
+                <main className="flex-1">{children}</main>
+                <SiteFooter />
+              </>
+            )}
           </ThemeProvider>
         </NextIntlClientProvider>
       </body>

@@ -5,10 +5,11 @@ import { Button } from "@/components/ui/button";
 import { Link } from "@/i18n/navigation";
 import { displayName, getUserProfile } from "@/lib/account";
 import { createClient } from "@/lib/supabase/server";
+import { getSessionClaims } from "@/lib/supabase/session";
 
 export async function UserAuth({ variant = "header" }: { variant?: "header" | "mobile" }) {
   const supabase = await createClient();
-  const { data } = await supabase.auth.getClaims();
+  const { data } = await getSessionClaims(supabase);
   const user = data?.claims ?? null;
 
   const tNav = await getTranslations("Nav");

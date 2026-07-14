@@ -1,3 +1,7 @@
+import { getTranslations } from "next-intl/server";
+
+import { Link } from "@/i18n/navigation";
+
 import { BadgesSection } from "./_components/sections/badges-section";
 import { ButtonsSection } from "./_components/sections/buttons-section";
 import { CardsSection } from "./_components/sections/cards-section";
@@ -9,9 +13,32 @@ import { NavigationSection } from "./_components/sections/navigation-section";
 import { TypographySection } from "./_components/sections/typography-section";
 import { SandboxShell } from "./_components/sandbox-shell";
 
-export default function SandboxPage() {
+export default async function SandboxPage() {
+  const t = await getTranslations("Cosmos.sandboxLinks");
+
   return (
     <SandboxShell>
+      <Link
+        href="/sandbox/cosmos"
+        className="mb-4 block rounded-xl border border-primary/25 bg-primary/5 p-4 text-sm transition-colors hover:bg-primary/10"
+      >
+        <span className="font-medium">{t("cosmosTitle")} →</span>{" "}
+        <span className="text-muted-foreground">{t("cosmosHint")}</span>
+      </Link>
+      <Link
+        href="/sandbox/cosmos/roadmap"
+        className="mb-4 block rounded-xl border border-border/60 bg-card/30 p-4 text-sm transition-colors hover:bg-card/50"
+      >
+        <span className="font-medium">{t("roadmapTitle")} →</span>{" "}
+        <span className="text-muted-foreground">{t("roadmapHint")}</span>
+      </Link>
+      <Link
+        href="/sandbox/cosmos/business-model"
+        className="mb-8 block rounded-xl border border-border/60 bg-card/30 p-4 text-sm transition-colors hover:bg-card/50"
+      >
+        <span className="font-medium">{t("bmcTitle")} →</span>{" "}
+        <span className="text-muted-foreground">{t("bmcHint")}</span>
+      </Link>
       <FontsSection />
       <ColorsSection />
       <TypographySection />

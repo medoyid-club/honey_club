@@ -3,16 +3,43 @@ import createIntlMiddleware from "next-intl/middleware";
 import { type NextRequest, NextResponse } from "next/server";
 
 import { routing } from "./i18n/routing";
+import { getSessionClaims, isSandboxPathname } from "./lib/supabase/session";
 
 const intlMiddleware = createIntlMiddleware(routing);
 
 export async function proxy(request: NextRequest) {
+  const pathname = request.nextUrl.pathname;
+  const isSandbox = isSandboxPathname(pathname);
+
+  const requestHeaders = new Headers(request.headers);
+  requestHeaders.set("x-pathname", pathname);
+
   // 1. Apply next-intl routing (locale redirects/rewrites).
   const intlResponse = intlMiddleware(request);
+
+  if (intlResponse instanceof NextResponse && intlResponse.headers.get("Location")) {
+    return intlResponse;
+  }
+
   let response: NextResponse =
     intlResponse instanceof NextResponse
       ? intlResponse
-      : NextResponse.next({ request });
+      : NextResponse.next({ request: { headers: requestHeaders } });
+
+  if (intlResponse instanceof NextResponse) {
+    response = NextResponse.next({ request: { headers: requestHeaders } });
+    intlResponse.headers.forEach((value, key) => {
+      response.headers.set(key, value);
+    });
+    intlResponse.cookies.getAll().forEach(({ name, value }) => {
+      response.cookies.set(name, value);
+    });
+  }
+
+  // Sandbox — локальная песочница без бэкенда; Supabase не нужен.
+  if (isSandbox) {
+    return response;
+  }
 
   // 2. Refresh Supabase Auth session and write updated cookies onto the response.
   const supabase = createServerClient(
@@ -24,12 +51,8 @@ export async function proxy(request: NextRequest) {
           return request.cookies.getAll();
         },
         setAll(cookiesToSet, headers) {
-          cookiesToSet.forEach(({ name, value }) =>
-            request.cookies.set(name, value)
-          );
-          // Re-create response to include updated cookies.
-          const updated = NextResponse.next({ request });
-          // Copy over intl headers (Location, etc.) so redirects still work.
+          cookiesToSet.forEach(({ name, value }) => request.cookies.set(name, value));
+          const updated = NextResponse.next({ request: { headers: requestHeaders } });
           response.headers.forEach((value, key) => {
             updated.headers.set(key, value);
           });
@@ -45,11 +68,11 @@ export async function proxy(request: NextRequest) {
           response = updated;
         },
       },
-    }
+    },
   );
 
   // IMPORTANT: Do not put any code between createServerClient and getClaims().
-  await supabase.auth.getClaims();
+  await getSessionClaims(supabase);
 
   return response;
 }
