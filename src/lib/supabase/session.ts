@@ -2,10 +2,7 @@ import type { SupabaseClient } from "@supabase/supabase-js";
 
 type ClaimsResult = Awaited<ReturnType<SupabaseClient["auth"]["getClaims"]>>;
 
-const loggedOut: ClaimsResult = {
-  data: { claims: null },
-  error: null,
-};
+const loggedOut = { data: null, error: null } as ClaimsResult;
 
 function isTlsOrNetworkFailure(error: unknown): boolean {
   if (!(error instanceof Error)) return false;

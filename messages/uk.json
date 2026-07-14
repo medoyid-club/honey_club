@@ -802,5 +802,77 @@
     "toStudio": "Перейти до студії",
     "mismatchTitle": "Інший email",
     "mismatchText": "Запрошення надіслано на {email}. Увійдіть під цією адресою."
+  },
+  "Cosmos": {
+    "nav": {
+      "sandbox": "UI Sandbox",
+      "prototype": "Прототип",
+      "roadmap": "Roadmap",
+      "businessModel": "Business Model Canvas"
+    },
+    "sandboxLinks": {
+      "cosmosTitle": "Умовний космос",
+      "cosmosHint": "інтерактивний прототип ігрового циклу: дім / подорож / інтеграція",
+      "roadmapTitle": "Roadmap RPG",
+      "roadmapHint": "графічний Gantt плану підготовки до розробки гри",
+      "bmcTitle": "Business Model Canvas",
+      "bmcHint": "бізнес-модель RPG: сегменти, цінність, етична монетизація"
+    },
+    "prototypePage": {
+      "title": "Умовний космос: прототип",
+      "description": "Інтерактивна модель ігрового циклу: дім ↔ подорож ↔ повернення. Дані в localStorage, без бекенду.",
+      "roadmapLink": "План розробки",
+      "roadmapHint": "Gantt-діаграма підготовки до розробки RPG (6 тижнів)",
+      "bmcLink": "Business Model Canvas",
+      "bmcHint": "односторінкова бізнес-модель гри: 9 блоків"
+    },
+    "roadmapPage": {
+      "title": "План підготовки до розробки",
+      "description": "Шеститижневий roadmap RPG «Умовний космос» (13 липня — 23 серпня 2026). Курси Honey Club — окремий контур."
+    },
+    "bmcPage": {
+      "title": "Business Model Canvas",
+      "description": "Односторінкова бізнес-модель RPG «Умовний космос» (9 блоків Osterwalder). Курси Honey Club — окремо. Пов’язано з b1–b3 на",
+      "roadmapLink": "roadmap"
+    },
+    "roadmap": {
+      "edit": "Редагувати",
+      "doneEdit": "Готово",
+      "reset": "Скинути до типового",
+      "daysShort": "дн.",
+      "selectedTask": "Обране завдання",
+      "todayPlan": "Сьогодні в плані",
+      "fieldTitle": "Назва",
+      "fieldDays": "Тривалість (днів)",
+      "fieldSection": "Секція",
+      "fieldMilestone": "Віха",
+      "deleteTask": "Видалити завдання",
+      "milestone": "віха",
+      "noTasksToday": "Сьогодні немає активних завдань на діаграмі.",
+      "outOfRange": "Сьогоднішня дата поза вікном плану.",
+      "contextTitle": "Контекст",
+      "contextBody": "План підготовки до розробки RPG «Умовний космос»: три потоки стартують паралельно. Курси Honey Club не входять у план.",
+      "todayProgress": "Сьогодні ({date}): день {day} з {total}",
+      "newTaskTitle": "Нове завдання"
+    },
+    "bmc": {
+      "edit": "Редагувати",
+      "doneEdit": "Готово",
+      "reset": "Скинути до типового",
+      "moreItems": "+{count} пунктів",
+      "addItem": "Додати",
+      "deleteItem": "Видалити",
+      "blockLinks": "Зв’язки блоку",
+      "pickBlockForLinks": "Оберіть інший блок для зв’язків.",
+      "statusLegend": "Легенда статусів",
+      "statusHypothesis": "гіпотеза",
+      "statusValidated": "зафіксовано",
+      "statusDeferred": "пізніше",
+      "legendHypothesis": "потребує перевірки на етапі b1–b3",
+      "legendValidated": "принцип або артефакт уже є",
+      "legendDeferred": "після PoC / MVP",
+      "updated": "оновлено",
+      "newItemText": "Новий пункт"
+    }
   }
 }
