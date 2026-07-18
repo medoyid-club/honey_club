@@ -26,6 +26,10 @@ next-env.d.ts
 *.pem
 # Google OAuth client secret downloads
 client_secret_*.json
+secrets/
+sur.txt
+token.json
+user_prof.txt
 
 # Logs
 npm-debug.log*

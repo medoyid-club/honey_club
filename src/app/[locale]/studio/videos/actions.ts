@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
 import { slugify } from "@/lib/slug";
+import { parseYoutubeId } from "@/lib/youtube-id";
 import { getStudioContext } from "@/lib/studio";
 import { createClient } from "@/lib/supabase/server";
 
@@ -14,14 +15,6 @@ function str(formData: FormData, key: string): string {
 function int(formData: FormData, key: string): number {
   const v = parseInt((formData.get(key) as string) || "0", 10);
   return Number.isFinite(v) && v > 0 ? v : 1;
-}
-
-function parseYoutubeId(input: string): string {
-  const raw = input.trim();
-  const match = raw.match(
-    /(?:youtu\.be\/|watch\?v=|embed\/|shorts\/)([a-zA-Z0-9_-]{6,})/
-  );
-  return match ? match[1] : raw;
 }
 
 export async function createCategory(formData: FormData) {

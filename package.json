@@ -11,7 +11,9 @@
     "seed:nata-manipulations": "node scripts/seed-nata-manipulations.mjs",
     "seed:nata-manipulations-upcoming": "node scripts/seed-nata-manipulations-upcoming.mjs",
     "seed:nata-course-media": "node scripts/seed-nata-course-media.mjs",
-    "seed:nata-promos": "node scripts/seed-nata-promos.mjs"
+    "seed:nata-promos": "node scripts/seed-nata-promos.mjs",
+    "content-hub:poll": "node scripts/content-hub/poll.mjs",
+    "content-hub:webhook": "node scripts/content-hub/setup-webhook.mjs"
   },
   "dependencies": {
     "@base-ui/react": "^1.5.0",
