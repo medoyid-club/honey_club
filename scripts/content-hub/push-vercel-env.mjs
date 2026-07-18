@@ -125,6 +125,12 @@ for (const key of KEYS) {
     console.warn(`Skip ${key} (empty)`);
     continue;
   }
+  if (key === "NEXT_PUBLIC_BASE_URL" && /localhost|127\.0\.0\.1/i.test(value)) {
+    console.warn(
+      `Skip ${key} (localhost). Set production URL in Vercel dashboard, e.g. https://medoyid-club.com`
+    );
+    continue;
+  }
   vercelEnvAdd(key, value, targets);
 }
 
