@@ -51,6 +51,7 @@ export default async function AuthorVideosPage({ params, searchParams }: Props) 
       title: pick(activeLocale, v.title_ru, v.title_uk, v.title_en),
       publishedAt: v.published_at,
       watchUrl: youtubeWatchUrl(v.youtube_id),
+      youtubeId: v.youtube_id,
       categoryLabel: v.category_id
         ? pick(
             activeLocale,

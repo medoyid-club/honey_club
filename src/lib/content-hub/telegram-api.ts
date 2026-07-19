@@ -72,3 +72,25 @@ export async function getUpdates(offset?: number): Promise<unknown> {
     allowed_updates: ["channel_post", "edited_channel_post"],
   });
 }
+
+export async function downloadTelegramPhoto(
+  fileId: string
+): Promise<{ buffer: Buffer; contentType: string; ext: string } | null> {
+  try {
+    const file = await callTelegram<{ file_path?: string }>("getFile", { file_id: fileId });
+    if (!file.file_path) return null;
+
+    const response = await fetch(`${TELEGRAM_API}/file/bot${botToken()}/${file.file_path}`);
+    if (!response.ok) return null;
+
+    const buffer = Buffer.from(await response.arrayBuffer());
+    const ext = file.file_path.split(".").pop()?.toLowerCase() || "jpg";
+    const contentType =
+      ext === "png" ? "image/png" : ext === "webp" ? "image/webp" : "image/jpeg";
+
+    return { buffer, contentType, ext };
+  } catch (err) {
+    console.warn("[content-hub/telegram] download photo failed:", err);
+    return null;
+  }
+}

@@ -58,7 +58,7 @@ export default async function StudioBlogEditorPage({
         </div>
       )}
 
-      <form id="studio-blog-form" action={updateBlogPost} className="space-y-6">
+      <form id="studio-blog-form" action={updateBlogPost} className="space-y-6" encType="multipart/form-data">
         <input type="hidden" name="locale" value={locale} />
         <input type="hidden" name="postId" value={post.id} />
 
@@ -106,6 +106,25 @@ export default async function StudioBlogEditorPage({
               <Area name="content_en" label={`${t("content")} EN`} value={post.content_en} rows={10} />
             </div>
             <p className="text-xs text-muted-foreground">{t("markdownHint")}</p>
+
+            <div className="space-y-2 rounded-lg border border-foreground/10 p-4">
+              <p className="text-sm font-medium">{t("cover")}</p>
+              {post.cover_url ? (
+                <div className="overflow-hidden rounded-md border border-foreground/10">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={post.cover_url} alt="" className="max-h-48 w-full object-cover" />
+                </div>
+              ) : (
+                <p className="text-xs text-muted-foreground">{t("coverEmpty")}</p>
+              )}
+              <input type="hidden" name="cover_url_current" value={post.cover_url ?? ""} />
+              <input
+                type="file"
+                name="cover"
+                accept="image/*"
+                className="block w-full text-sm text-muted-foreground file:mr-3 file:rounded-md file:border-0 file:bg-primary file:px-3 file:py-1.5 file:text-sm file:text-primary-foreground"
+              />
+            </div>
 
             <label className="flex items-center gap-2 text-sm">
               <input

@@ -2,11 +2,11 @@ import { uniqueYoutubeIds } from "@/lib/youtube-id";
 import { CLUB_YOUTUBE_HANDLES } from "@/lib/content-hub/authors";
 import type { IncomingTelegramPost } from "@/lib/content-hub/types";
 
-type TelegramMessage = {
+export type TelegramChannelPost = {
   message_id: number;
   text?: string;
   caption?: string;
-  photo?: unknown[];
+  photo?: Array<{ file_id: string; file_size?: number }>;
   video?: unknown;
   document?: unknown;
   audio?: unknown;
@@ -16,7 +16,7 @@ type TelegramMessage = {
 
 const URL_RE = /https?:\/\/[^\s<>"')\]]+/gi;
 
-export function extractUrls(text: string, entities?: TelegramMessage["entities"]): string[] {
+export function extractUrls(text: string, entities?: TelegramChannelPost["entities"]): string[] {
   const found = new Set<string>();
 
   for (const match of text.matchAll(URL_RE)) {
@@ -36,18 +36,21 @@ export function extractUrls(text: string, entities?: TelegramMessage["entities"]
 
 export function parseChannelPost(
   chatId: string,
-  message: TelegramMessage
+  message: TelegramChannelPost
 ): IncomingTelegramPost {
   const text = (message.text ?? message.caption ?? "").trim();
   const hasMedia = Boolean(
-    message.photo || message.video || message.document || message.audio || message.voice
+    message.photo?.length || message.video || message.document || message.audio || message.voice
   );
+  const photoFileId =
+    message.photo?.length ? message.photo[message.photo.length - 1].file_id : null;
 
   return {
     sourceChannelId: String(chatId),
     sourceMessageId: message.message_id,
     text,
     hasMedia,
+    photoFileId,
     rawUrls: extractUrls(text, message.entities),
   };
 }

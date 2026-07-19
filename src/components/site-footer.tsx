@@ -1,5 +1,6 @@
 import { useTranslations } from "next-intl";
 
+import { ClubSocialLinks } from "@/components/club-social-links";
 import { SiteLogo } from "@/components/site-logo";
 import { Link } from "@/i18n/navigation";
 
@@ -37,6 +38,7 @@ export function SiteFooter() {
         <div className="space-y-3">
           <SiteLogo showTagline />
           <p className="text-sm text-muted-foreground">{t("tagline")}</p>
+          <ClubSocialLinks />
         </div>
 
         {columns.map((column) => (

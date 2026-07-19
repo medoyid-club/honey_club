@@ -1,11 +1,14 @@
 import { ExternalLink, Play } from "lucide-react";
 
+import { youtubeThumbnailUrl } from "@/lib/youtube-id";
+
 type Props = {
   video: {
     id: string;
     title: string;
     publishedAt: string | null;
     watchUrl: string | null;
+    youtubeId?: string | null;
   };
   categoryLabel: string;
   channelUrl: string | null;
@@ -24,6 +27,7 @@ export function AuthorVideoCard({ video, categoryLabel, channelUrl, labels }: Pr
       })
     : "";
   const href = video.watchUrl ?? channelUrl ?? "#";
+  const thumb = video.youtubeId ? youtubeThumbnailUrl(video.youtubeId) : null;
 
   return (
     <a
@@ -32,8 +36,19 @@ export function AuthorVideoCard({ video, categoryLabel, channelUrl, labels }: Pr
       rel="noopener noreferrer"
       className="group flex flex-col overflow-hidden rounded-xl border border-foreground/10 bg-card transition-colors hover:border-primary/25 hover:bg-primary/[0.03]"
     >
-      <div className="relative flex aspect-video items-center justify-center bg-muted/50">
-        <div className="flex size-14 items-center justify-center rounded-full bg-primary/90 text-primary-foreground shadow-lg transition-transform group-hover:scale-105 group-hover:honey-glow-sm">
+      <div className="relative flex aspect-video items-center justify-center overflow-hidden bg-muted/50">
+        {thumb ? (
+          <>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={thumb}
+              alt=""
+              className="absolute inset-0 size-full object-cover transition-transform duration-300 group-hover:scale-[1.03]"
+            />
+            <div className="absolute inset-0 bg-black/25 transition-colors group-hover:bg-black/35" />
+          </>
+        ) : null}
+        <div className="relative flex size-14 items-center justify-center rounded-full bg-primary/90 text-primary-foreground shadow-lg transition-transform group-hover:scale-105 group-hover:honey-glow-sm">
           <Play className="size-6 fill-current" />
         </div>
         {categoryLabel && (

@@ -1,6 +1,6 @@
-import Image from "next/image";
-
+import { AuthorImage } from "@/components/authors/author-image";
 import { AuthorSocialLinks } from "@/components/authors/author-social-links";
+import { authorAvatarSrc } from "@/lib/authors/media";
 import { pick, toSocialLinks, type AuthorPageRow } from "@/lib/authors/db";
 import type { Locale } from "@/i18n/routing";
 
@@ -13,7 +13,7 @@ export function AuthorSidebar({ page, locale }: Props) {
   const name = page.display_name || page.slug;
   const role = pick(locale, page.headline_ru, page.headline_uk, page.headline_en);
   const slogan = pick(locale, page.slogan_ru, page.slogan_uk, page.slogan_en);
-  const photo = page.avatar_url || "/authors/nata-ustimenko.png";
+  const photo = authorAvatarSrc(page);
   const social = toSocialLinks(page.socials);
 
   return (
@@ -30,14 +30,7 @@ export function AuthorSidebar({ page, locale }: Props) {
             {social.length > 0 && <AuthorSocialLinks links={social} />}
           </div>
           <div className="relative size-24 shrink-0 overflow-hidden rounded-xl ring-2 ring-primary/20 honey-glow-sm">
-            <Image
-              src={photo}
-              alt={name}
-              fill
-              className="object-cover object-top"
-              sizes="96px"
-              priority
-            />
+            <AuthorImage src={photo} alt={name} sizes="96px" priority />
           </div>
         </div>
         {slogan && (

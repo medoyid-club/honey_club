@@ -6,6 +6,7 @@ import { formatRejectLog, processPostWithGemini } from "@/lib/content-hub/gemini
 import {
   extractYoutubeVideoIds,
   parseChannelPost,
+  type TelegramChannelPost,
 } from "@/lib/content-hub/parse-message";
 import {
   markMessageProcessed,
@@ -19,18 +20,6 @@ import {
   detectAuthorsFromDescription,
   fetchClubYoutubeVideos,
 } from "@/lib/content-hub/youtube";
-
-type TelegramChannelPost = {
-  message_id: number;
-  text?: string;
-  caption?: string;
-  photo?: unknown[];
-  video?: unknown;
-  document?: unknown;
-  audio?: unknown;
-  voice?: unknown;
-  entities?: Array<{ type: string; offset: number; length: number; url?: string }>;
-};
 
 export async function runContentHubPipeline(
   chatId: string,
@@ -110,7 +99,12 @@ export async function runContentHubPipeline(
     return { ok: false, reason: "telegram_error" };
   }
 
-  const blogPostId = await syncBlogPost({ authorSlug: author.slug, gemini });
+  const blogPostId = await syncBlogPost({
+    authorSlug: author.slug,
+    gemini,
+    post,
+    clubYoutubeIds: clubVideos.map((v) => v.videoId),
+  });
   const videoIds = await syncClubVideos({
     clubVideos,
     authorSlugs: [...videoAuthorSlugs],

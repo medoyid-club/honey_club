@@ -178,7 +178,7 @@ export function detectAuthorsFromDescription(
   const nataHints = ["ната", "nata", "устименко", "ustimenko", "philosophy by nata"];
   const tetianaHints = ["тетяна", "tetiana", "гукало", "gukalo"];
 
-  if (nataHints.some((h) => lower.includes(h))) slugs.add("nata-ustimenko");
+  if (nataHints.some((h) => lower.includes(h))) slugs.add("nata-ustymenko");
   if (tetianaHints.some((h) => lower.includes(h))) slugs.add("tetiana-gukalo");
 
   return [...slugs];

@@ -1,3 +1,4 @@
+import { CLUB_LINKS } from "@/lib/club-links";
 import type { AuthorKey } from "@/lib/content-hub/types";
 
 export type AuthorHubConfig = {
@@ -27,7 +28,7 @@ export function getAuthorConfigs(): AuthorHubConfig[] {
   return [
     {
       key: "nata",
-      slug: process.env.CONTENT_HUB_NATA_SLUG ?? "nata-ustimenko",
+      slug: process.env.CONTENT_HUB_NATA_SLUG ?? "nata-ustymenko",
       hashtag: "#NataUstimenko",
       displayNameRu: "Ната Устименко",
       subscribeTextRu: "Нату Устименко",
@@ -72,11 +73,18 @@ export function authorWebUrl(author: AuthorHubConfig): string {
 }
 
 export function buildAuthorFooterHtml(author: AuthorHubConfig): string {
-  const parts: string[] = [`<a href="${authorWebUrl(author)}">Web</a>`, `<a href="${author.telegramUrl}">Telegram</a>`];
+  const parts: string[] = [
+    `<a href="${CLUB_LINKS.web}">Web</a>`,
+    `<a href="${CLUB_LINKS.telegram}">Telegram</a>`,
+    `<a href="${CLUB_LINKS.youtube}">YouTube</a>`,
+    `<a href="${CLUB_LINKS.facebook}">Facebook</a>`,
+    `<a href="${authorWebUrl(author)}">${author.displayNameRu}</a>`,
+    `<a href="${author.telegramUrl}">Telegram автора</a>`,
+  ];
   if (author.facebookUrl) {
-    parts.push(`<a href="${author.facebookUrl}">Facebook</a>`);
+    parts.push(`<a href="${author.facebookUrl}">Facebook автора</a>`);
   }
-  return `Подписывайтесь на ${author.subscribeTextRu}.\n${parts.join(" | ")}`;
+  return `Подписывайтесь на ${author.subscribeTextRu} и Клуб медоедов.\n${parts.join(" | ")}`;
 }
 
 export const CLUB_YOUTUBE_HANDLES = ["honey_erbe", "medoyid-club"] as const;

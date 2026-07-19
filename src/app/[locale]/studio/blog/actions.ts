@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
+import { uploadAuthorMedia } from "@/lib/author-media";
 import { slugify } from "@/lib/slug";
 import { getStudioContext } from "@/lib/studio";
 import { createClient } from "@/lib/supabase/server";
@@ -87,6 +88,13 @@ export async function updateBlogPost(formData: FormData) {
       ? new Date().toISOString()
       : current?.published_at ?? null;
 
+  const coverFile = formData.get("cover") as File | null;
+  const uploadedCover =
+    coverFile?.size
+      ? await uploadAuthorMedia(supabase, page.id, "blog-cover", coverFile)
+      : null;
+  const coverUrl = uploadedCover ?? (str(formData, "cover_url_current") || null);
+
   await supabase
     .from("blog_posts")
     .update({
@@ -100,6 +108,7 @@ export async function updateBlogPost(formData: FormData) {
       content_ru: str(formData, "content_ru") || null,
       content_uk: str(formData, "content_uk") || null,
       content_en: str(formData, "content_en") || null,
+      cover_url: coverUrl,
       reading_minutes: int(formData, "reading_minutes"),
       published,
       published_at: publishedAt,

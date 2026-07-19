@@ -32,6 +32,7 @@ export default async function AuthorBlogPostPage({ params }: Props) {
     excerpt: pick(activeLocale, raw.excerpt_ru, raw.excerpt_uk, raw.excerpt_en),
     publishedAt: raw.published_at ?? new Date().toISOString(),
     readingMinutes: raw.reading_minutes,
+    coverUrl: raw.cover_url,
   };
   const content = pick(activeLocale, raw.content_ru, raw.content_uk, raw.content_en);
 
@@ -41,6 +42,7 @@ export default async function AuthorBlogPostPage({ params }: Props) {
         slug={slug}
         post={post}
         labels={{ read: t("read"), minutes: t("minutes") }}
+        linkTitle={false}
       />
       <div className="rounded-xl border border-foreground/10 bg-card p-6">
         {content ? (

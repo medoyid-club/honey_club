@@ -1,8 +1,34 @@
 import { slugify } from "@/lib/slug";
 import { normalizeYoutubeId } from "@/lib/youtube-id";
 import { findAuthorBySlug } from "@/lib/content-hub/authors";
-import type { ClubYouTubeVideo, GeminiHubResult } from "@/lib/content-hub/types";
+import { resolveBlogCoverUrl } from "@/lib/content-hub/media";
+import type { ClubYouTubeVideo, ContentLocale, GeminiHubResult, IncomingTelegramPost } from "@/lib/content-hub/types";
 import { createServiceClient } from "@/lib/supabase/service";
+
+function blogLocaleFields(
+  locale: ContentLocale,
+  title: string,
+  excerpt: string | null,
+  content: string
+): Record<string, string | null> {
+  const fields: Record<string, string | null> = {
+    title_ru: null,
+    title_uk: null,
+    title_en: null,
+    excerpt_ru: null,
+    excerpt_uk: null,
+    excerpt_en: null,
+    content_ru: null,
+    content_uk: null,
+    content_en: null,
+  };
+
+  const prefix = locale === "uk" ? "uk" : locale === "en" ? "en" : "ru";
+  fields[`title_${prefix}`] = title;
+  fields[`excerpt_${prefix}`] = excerpt;
+  fields[`content_${prefix}`] = content;
+  return fields;
+}
 
 async function getAuthorPageId(slug: string): Promise<string | null> {
   const supabase = createServiceClient();
@@ -59,9 +85,11 @@ async function ensureDefaultVideoCategory(pageId: string): Promise<string | null
 export async function syncBlogPost(params: {
   authorSlug: string;
   gemini: GeminiHubResult;
+  post: IncomingTelegramPost;
+  clubYoutubeIds: string[];
 }): Promise<string | null> {
-  const { authorSlug, gemini } = params;
-  if (!gemini.blog_title_ru || !gemini.blog_content_ru) return null;
+  const { authorSlug, gemini, post, clubYoutubeIds } = params;
+  if (!gemini.blog_title || !gemini.blog_content) return null;
   if (gemini.content_type === "video") return null;
 
   const pageId = await getAuthorPageId(authorSlug);
@@ -70,22 +98,29 @@ export async function syncBlogPost(params: {
     return null;
   }
 
+  const coverUrl = await resolveBlogCoverUrl({
+    authorPageId: pageId,
+    photoFileId: post.photoFileId,
+    rawUrls: post.rawUrls,
+    clubYoutubeIds,
+  });
+
   const supabase = createServiceClient();
-  const slug = await uniqueBlogSlug(pageId, gemini.blog_title_ru);
-  const words = gemini.blog_content_ru.trim().split(/\s+/).length;
+  const slug = await uniqueBlogSlug(pageId, gemini.blog_title);
+  const words = gemini.blog_content.trim().split(/\s+/).length;
   const readingMinutes = Math.max(1, Math.ceil(words / 200));
+  const excerpt = gemini.blog_excerpt ?? gemini.blog_content.slice(0, 280);
 
   const { data, error } = await supabase
     .from("blog_posts")
     .insert({
       author_page_id: pageId,
       slug,
-      title_ru: gemini.blog_title_ru,
-      excerpt_ru: gemini.blog_content_ru.slice(0, 280),
-      content_ru: gemini.blog_content_ru,
+      ...blogLocaleFields(gemini.blog_locale, gemini.blog_title, excerpt, gemini.blog_content),
+      cover_url: coverUrl,
       reading_minutes: readingMinutes,
-      published: true,
-      published_at: new Date().toISOString(),
+      published: false,
+      published_at: null,
     })
     .select("id")
     .single();

@@ -201,19 +201,20 @@ function FileField({
   current: string | null;
 }) {
   return (
-    <label className="space-y-1 text-sm">
+    <label className="space-y-2 text-sm">
       <span className="text-muted-foreground">{label}</span>
+      {current ? (
+        <div className="overflow-hidden rounded-md border border-foreground/10 bg-muted/30">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src={current} alt="" className="max-h-32 w-full object-cover" />
+        </div>
+      ) : null}
       <input
         type="file"
         name={name}
         accept="image/*"
         className="block w-full text-xs text-muted-foreground file:mr-3 file:rounded-md file:border-0 file:bg-primary/10 file:px-3 file:py-2 file:text-sm file:font-medium file:text-primary"
       />
-      {current && (
-        <span className="block truncate text-xs text-muted-foreground/70">
-          {current}
-        </span>
-      )}
     </label>
   );
 }

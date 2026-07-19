@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 
+import { AuthorImage } from "@/components/authors/author-image";
 import { Link } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/routing";
 import { getPublishedAuthorPages, pick } from "@/lib/authors/db";
+import { authorCardImageSrc } from "@/lib/authors/media";
 
 type Props = { params: Promise<{ locale: string }> };
 
@@ -39,7 +40,7 @@ export default async function AuthorsIndexPage({ params }: Props) {
             page.headline_uk,
             page.headline_en
           );
-          const photo = page.avatar_url || "/authors/nata-ustimenko.png";
+          const photo = authorCardImageSrc(page);
 
           return (
             <Link
@@ -48,12 +49,11 @@ export default async function AuthorsIndexPage({ params }: Props) {
               className="group overflow-hidden rounded-xl border border-foreground/10 bg-card transition-colors hover:border-primary/25 hover:bg-primary/[0.03]"
             >
               <div className="relative aspect-[4/3] bg-muted/40">
-                <Image
+                <AuthorImage
                   src={photo}
                   alt={name}
-                  fill
-                  className="object-cover object-top transition-transform group-hover:scale-[1.02]"
                   sizes="(max-width: 768px) 100vw, 33vw"
+                  className="transition-transform group-hover:scale-[1.02]"
                 />
               </div>
               <div className="space-y-1 p-4">

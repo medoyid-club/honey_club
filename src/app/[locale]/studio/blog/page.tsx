@@ -5,6 +5,8 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Link } from "@/i18n/navigation";
+import { pick } from "@/lib/authors/db";
+import type { Locale } from "@/i18n/routing";
 import { getStudioContext } from "@/lib/studio";
 import { createClient } from "@/lib/supabase/server";
 
@@ -13,6 +15,8 @@ type Props = { params: Promise<{ locale: string }> };
 type PostRow = {
   id: string;
   title_ru: string;
+  title_uk: string | null;
+  title_en: string | null;
   slug: string;
   published: boolean;
   reading_minutes: number;
@@ -21,6 +25,7 @@ type PostRow = {
 export default async function StudioBlogPage({ params }: Props) {
   const { locale } = await params;
   setRequestLocale(locale);
+  const activeLocale = locale as Locale;
 
   const { page } = await getStudioContext(locale);
   const t = await getTranslations("Studio.blog");
@@ -28,7 +33,7 @@ export default async function StudioBlogPage({ params }: Props) {
   const supabase = await createClient();
   const { data } = await supabase
     .from("blog_posts")
-    .select("id, title_ru, slug, published, reading_minutes")
+    .select("id, title_ru, title_uk, title_en, slug, published, reading_minutes")
     .eq("author_page_id", page.id)
     .order("created_at", { ascending: false });
 
@@ -41,6 +46,7 @@ export default async function StudioBlogPage({ params }: Props) {
           {t("title")}
         </h1>
         <p className="text-muted-foreground">{t("subtitle")}</p>
+        <p className="text-sm text-muted-foreground">{t("draftHint")}</p>
       </header>
 
       <Card>
@@ -66,7 +72,9 @@ export default async function StudioBlogPage({ params }: Props) {
             <Card className="transition-colors hover:border-primary/40">
               <CardContent className="flex flex-wrap items-center justify-between gap-3 py-4">
                 <div className="min-w-0">
-                  <p className="truncate font-medium">{p.title_ru}</p>
+                  <p className="truncate font-medium">
+                    {pick(activeLocale, p.title_ru, p.title_uk, p.title_en) || p.title_ru}
+                  </p>
                   <p className="truncate text-xs text-muted-foreground">/{p.slug}</p>
                 </div>
                 <Badge variant={p.published ? "default" : "outline"}>

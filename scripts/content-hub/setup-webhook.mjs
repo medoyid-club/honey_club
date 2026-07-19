@@ -3,6 +3,7 @@
  *
  * Usage:
  *   node scripts/content-hub/setup-webhook.mjs
+ *   node scripts/content-hub/setup-webhook.mjs https://www.medoyid-club.com
  *   node scripts/content-hub/setup-webhook.mjs delete
  */
 
@@ -33,15 +34,17 @@ function loadEnvLocal() {
 loadEnvLocal();
 
 const token = process.env.TELEGRAM_BOT_TOKEN;
-const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
+const cliArg = process.argv[2];
+const action = cliArg === "delete" ? "delete" : "set";
+const baseUrlFromCli =
+  cliArg && cliArg !== "delete" && cliArg.startsWith("http") ? cliArg : undefined;
+const baseUrl = baseUrlFromCli ?? process.env.NEXT_PUBLIC_BASE_URL;
 const secret = process.env.TELEGRAM_WEBHOOK_SECRET ?? crypto.randomBytes(16).toString("hex");
 
 if (!token) {
   console.error("TELEGRAM_BOT_TOKEN is not set");
   process.exit(1);
 }
-
-const action = process.argv[2] ?? "set";
 
 async function call(method, body) {
   const res = await fetch(`https://api.telegram.org/bot${token}/${method}`, {
@@ -60,7 +63,10 @@ if (action === "delete") {
 }
 
 if (!baseUrl || baseUrl.includes("localhost")) {
-  console.error("Set NEXT_PUBLIC_BASE_URL to your public HTTPS URL (e.g. Vercel deployment)");
+  console.error(
+    "Set NEXT_PUBLIC_BASE_URL in .env.local or pass URL as argument:\n" +
+      "  node scripts/content-hub/setup-webhook.mjs https://www.medoyid-club.com"
+  );
   process.exit(1);
 }
 

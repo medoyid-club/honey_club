@@ -1,6 +1,6 @@
-import Image from "next/image";
-
+import { AuthorImage } from "@/components/authors/author-image";
 import { Link } from "@/i18n/navigation";
+import { authorAvatarSrc } from "@/lib/authors/media";
 
 type Props = {
   name: string;
@@ -10,19 +10,12 @@ type Props = {
 };
 
 export function CourseCardAuthor({ name, slug, avatarUrl, label }: Props) {
-  const photo = avatarUrl || "/authors/nata-ustimenko.png";
+  const photo = authorAvatarSrc({ avatar_url: avatarUrl });
 
   const row = (
     <span className="flex items-center gap-2">
       <span className="relative size-8 shrink-0 overflow-hidden rounded-full ring-1 ring-primary/15">
-        <Image
-          src={photo}
-          alt=""
-          fill
-          className="object-cover object-top"
-          sizes="32px"
-          unoptimized
-        />
+        <AuthorImage src={photo} alt="" sizes="32px" />
       </span>
       <span className="min-w-0 truncate font-medium text-foreground">{name}</span>
     </span>

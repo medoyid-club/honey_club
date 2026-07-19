@@ -30,3 +30,10 @@ export function uniqueYoutubeIds(inputs: string[]): string[] {
   }
   return [...ids];
 }
+
+/** YouTube video thumbnail (hqdefault works for most embed cards). */
+export function youtubeThumbnailUrl(videoId: string, quality: "hqdefault" | "maxresdefault" = "hqdefault"): string {
+  const id = normalizeYoutubeId(videoId);
+  if (!id) return "";
+  return `https://i.ytimg.com/vi/${id}/${quality}.jpg`;
+}

@@ -418,6 +418,7 @@
     "blog": {
       "title": "Blog",
       "subtitle": "Create articles in three languages.",
+      "draftHint": "Telegram posts arrive as drafts — edit and check Publish when ready.",
       "newPlaceholder": "New article title",
       "create": "Create article",
       "empty": "No articles yet.",
@@ -430,6 +431,8 @@
       "readingMinutes": "Reading time (min)",
       "excerpt": "Excerpt",
       "content": "Content",
+      "cover": "Cover image",
+      "coverEmpty": "No cover yet. Upload a file or one will be pulled from Telegram/YouTube.",
       "markdownHint": "Markdown supported.",
       "publish": "Publish",
       "save": "Save",

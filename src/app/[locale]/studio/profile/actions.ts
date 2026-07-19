@@ -5,10 +5,11 @@ import { redirect } from "next/navigation";
 
 import type { SocialEntry } from "@/lib/authors/db";
 import type { AuthorSocialPlatform } from "@/lib/authors/types";
+import { uploadAuthorMedia } from "@/lib/author-media";
 import { slugify } from "@/lib/slug";
 import { getStudioContext } from "@/lib/studio";
 import { createClient } from "@/lib/supabase/server";
-import type { SupabaseClient } from "@supabase/supabase-js";
+import { createServiceClient } from "@/lib/supabase/service";
 
 const SOCIAL_PLATFORMS: AuthorSocialPlatform[] = [
   "youtube",
@@ -19,39 +20,14 @@ const SOCIAL_PLATFORMS: AuthorSocialPlatform[] = [
   "mono",
 ];
 
-async function uploadImage(
-  supabase: SupabaseClient,
-  pageId: string,
-  kind: "cover" | "avatar",
-  file: File
-): Promise<string | null> {
-  if (!file || file.size === 0) return null;
-
-  const ext = (file.name.split(".").pop() || "jpg").toLowerCase();
-  const path = `${pageId}/${kind}-${Date.now()}.${ext}`;
-  const buffer = Buffer.from(await file.arrayBuffer());
-
-  const { error } = await supabase.storage
-    .from("author-media")
-    .upload(path, buffer, {
-      contentType: file.type || "image/jpeg",
-      upsert: true,
-    });
-
-  if (error) return null;
-
-  const { data } = supabase.storage.from("author-media").getPublicUrl(path);
-  return data.publicUrl;
-}
-
 export async function updateAuthorProfile(formData: FormData) {
   const locale = (formData.get("locale") as string) || "ru";
   const { page } = await getStudioContext(locale);
   const supabase = await createClient();
+  const storage = createServiceClient();
 
   const str = (key: string) => ((formData.get(key) as string) || "").trim();
 
-  // Slug
   let slug = slugify(str("slug") || page.slug);
   if (slug !== page.slug) {
     const { data: clash } = await supabase
@@ -63,7 +39,6 @@ export async function updateAuthorProfile(formData: FormData) {
     if (clash) slug = page.slug;
   }
 
-  // Socials
   const socials: SocialEntry[] = [];
   for (const platform of SOCIAL_PLATFORMS) {
     const url = str(`social_${platform}`);
@@ -76,22 +51,19 @@ export async function updateAuthorProfile(formData: FormData) {
   if (contactEmail) contacts.email = contactEmail;
   if (contactLocation) contacts.location = contactLocation;
 
-  const coverUrl =
-    (await uploadImage(
-      supabase,
-      page.id,
-      "cover",
-      formData.get("cover") as File
-    )) ?? page.cover_url;
-  const avatarUrl =
-    (await uploadImage(
-      supabase,
-      page.id,
-      "avatar",
-      formData.get("avatar") as File
-    )) ?? page.avatar_url;
+  const coverFile = formData.get("cover");
+  const avatarFile = formData.get("avatar");
 
-  await supabase
+  const coverUrl =
+    (coverFile instanceof File
+      ? await uploadAuthorMedia(storage, page.id, "cover", coverFile)
+      : null) ?? page.cover_url;
+  const avatarUrl =
+    (avatarFile instanceof File
+      ? await uploadAuthorMedia(storage, page.id, "avatar", avatarFile)
+      : null) ?? page.avatar_url;
+
+  const { error } = await supabase
     .from("author_pages")
     .update({
       slug,
@@ -112,7 +84,13 @@ export async function updateAuthorProfile(formData: FormData) {
     })
     .eq("id", page.id);
 
+  if (error) {
+    redirect(`/${locale}/studio/profile?error=save`);
+  }
+
   revalidatePath(`/${locale}/studio/profile`);
+  revalidatePath(`/${locale}/authors`, "layout");
+  revalidatePath(`/${locale}/authors/${slug}`, "layout");
   redirect(`/${locale}/studio/profile?saved=1`);
 }
 
@@ -127,5 +105,7 @@ export async function toggleAuthorPagePublished(formData: FormData) {
     .eq("id", page.id);
 
   revalidatePath(`/${locale}/studio`, "layout");
+  revalidatePath(`/${locale}/authors`, "layout");
+  revalidatePath(`/${locale}/authors/${page.slug}`, "layout");
   redirect(`/${locale}/studio/profile?saved=1`);
 }
