@@ -64,7 +64,13 @@ export async function inviteAuthor(formData: FormData) {
 
   let emailSent = false;
   try {
-    const { error } = await sendEmail({ to: email, subject, html });
+    const { error } = await sendEmail({
+      to: email,
+      subject,
+      html,
+      from: "admin",
+      replyTo: "admin",
+    });
     emailSent = !error;
     if (error) {
       console.error("[inviteAuthor] Resend returned error:", error);
@@ -75,8 +81,7 @@ export async function inviteAuthor(formData: FormData) {
   }
 
   revalidatePath(`/${locale}/admin`);
-  // Pass the token back so the admin can copy the accept link locally
-  // (Resend test mode only delivers to the account owner).
+  // Pass the token back so the admin can copy the accept link if delivery failed.
   redirect(
     `/${locale}/admin?invited=${encodeURIComponent(email)}&sent=${
       emailSent ? "1" : "0"

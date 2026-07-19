@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { Markdown } from "@/components/markdown";
 import type { Locale } from "@/i18n/routing";
 import { getPublishedAuthorPageBySlug, pick } from "@/lib/authors/db";
+import { authorEmailBySlug } from "@/lib/email/addresses";
 
 type Props = { params: Promise<{ locale: string; slug: string }> };
 
@@ -18,6 +19,7 @@ export default async function AuthorAboutPage({ params }: Props) {
   const t = await getTranslations("Author.about");
   const bio = pick(activeLocale, page.bio_ru, page.bio_uk, page.bio_en);
   const contacts = (page.contacts ?? {}) as Record<string, string>;
+  const email = contacts.email || authorEmailBySlug(slug);
 
   return (
     <div className="space-y-6">
@@ -34,12 +36,16 @@ export default async function AuthorAboutPage({ params }: Props) {
         ) : (
           <p className="text-sm text-muted-foreground">{t("moreSoon")}</p>
         )}
-        {(contacts.email || contacts.location) && (
+        {(email || contacts.location) && (
           <dl className="grid gap-2 border-t border-foreground/10 pt-4 text-sm">
-            {contacts.email && (
+            {email && (
               <div className="flex gap-2">
-                <dt className="text-muted-foreground">Email:</dt>
-                <dd>{contacts.email}</dd>
+                <dt className="text-muted-foreground">{t("email")}:</dt>
+                <dd>
+                  <a href={`mailto:${email}`} className="text-primary hover:underline">
+                    {email}
+                  </a>
+                </dd>
               </div>
             )}
             {contacts.location && (

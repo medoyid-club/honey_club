@@ -42,7 +42,13 @@ export async function sendGiftAccessEmail(params: {
         : `<p>Вам подарили доступ: <strong>${params.itemTitle}</strong>.</p><p><a href="${loginUrl}">Войдите или зарегистрируйтесь</a> под этим e-mail, чтобы увидеть курс в кабинете.</p>`;
 
   try {
-    return await sendEmail({ to: params.to, subject, html });
+    return await sendEmail({
+      to: params.to,
+      subject,
+      html,
+      from: "noreply",
+      replyTo: "courses",
+    });
   } catch (err) {
     console.error("[gift-email]", err);
     return { id: null, error: "send_failed" };

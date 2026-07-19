@@ -206,6 +206,36 @@
     "linkTerms": "Terms of Service",
     "rights": "© {year} Medoyid Club. All rights reserved."
   },
+  "Contacts": {
+    "title": "Contacts",
+    "subtitle": "Club service addresses and authors' personal emails. We usually reply within 1–2 business days.",
+    "clubSection": "Medoyid Club",
+    "clubSectionHint": "Choose the address that matches your request",
+    "authorsSection": "Authors",
+    "authorsSectionHint": "Personal email of platform instructors",
+    "services": {
+      "support": {
+        "title": "Support",
+        "description": "Platform, billing, and course access questions"
+      },
+      "media": {
+        "title": "Media",
+        "description": "Press inquiries, interviews, and publications"
+      },
+      "partners": {
+        "title": "Partnerships",
+        "description": "Collaborations, sponsorships, and joint projects"
+      }
+    },
+    "authors": {
+      "nata": {
+        "description": "Philosophy, lectures, and sponsored live streams"
+      },
+      "tetiana": {
+        "description": "Courses, practices, and personal consultations"
+      }
+    }
+  },
   "Authors": {
     "title": "Authors",
     "subtitle": "Medoyid Club instructors and experts — their courses, articles, and videos."
@@ -250,7 +280,8 @@
       "title": "About the author",
       "subtitle": "A short introduction to the person behind the content.",
       "moreSoon": "Extended bio, achievements, and media — in upcoming updates.",
-      "location": "Location"
+      "location": "Location",
+      "email": "Email"
     }
   },
   "Studio": {
