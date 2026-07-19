@@ -25,7 +25,8 @@ export function normalizeYoutubeId(input: string): string | null {
 export function extractYoutubeIdsFromText(...parts: Array<string | null | undefined>): string[] {
   const text = parts.filter(Boolean).join("\n");
   const ids = new Set<string>();
-  for (const match of text.matchAll(YOUTUBE_ID_IN_URL)) {
+  const globalPattern = new RegExp(YOUTUBE_ID_IN_URL.source, "g");
+  for (const match of text.matchAll(globalPattern)) {
     if (match[1]) ids.add(match[1]);
   }
   return [...ids];
