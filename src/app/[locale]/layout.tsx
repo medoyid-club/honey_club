@@ -33,6 +33,13 @@ export const metadata: Metadata = {
   },
   description:
     "Школа развития и личностного роста. Онлайн-курсы, лекции и семинары. Скоро — социальная RPG-среда с картой мира и квестами.",
+  icons: {
+    icon: [
+      { url: "/favicon.ico", sizes: "32x32" },
+      { url: "/favicon-32.png", type: "image/png", sizes: "32x32" },
+    ],
+    apple: [{ url: "/apple-touch-icon.png", type: "image/png", sizes: "180x180" }],
+  },
 };
 
 export function generateStaticParams() {

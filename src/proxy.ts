@@ -78,5 +78,6 @@ export async function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/((?!api|auth|_next|_vercel|.*\\..*).*)"],
+  // Exclude metadata routes (/icon, /apple-icon) and static files (paths with a dot).
+  matcher: ["/((?!api|auth|_next|_vercel|icon|apple-icon|.*\\..*).*)"],
 };
