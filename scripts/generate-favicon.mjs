@@ -1,6 +1,7 @@
-import { readFile, writeFile } from "node:fs/promises";
+import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 import sharp from "sharp";
+import toIco from "to-ico";
 
 const root = process.cwd();
 const logoPath = join(root, "public/brand/logo.png");
@@ -29,11 +30,17 @@ async function brandedIcon(size, logoSize, radius) {
     .toBuffer();
 }
 
+const icon16 = await brandedIcon(16, 12, 4);
 const icon32 = await brandedIcon(32, 24, 8);
 const icon180 = await brandedIcon(180, 132, 36);
+const faviconIco = await toIco([icon16, icon32]);
 
+await mkdir(join(root, "src/app"), { recursive: true });
+
+await writeFile(join(root, "src/app/favicon.ico"), faviconIco);
+await writeFile(join(root, "src/app/apple-icon.png"), icon180);
+await writeFile(join(root, "public/favicon.ico"), faviconIco);
 await writeFile(join(root, "public/favicon-32.png"), icon32);
 await writeFile(join(root, "public/apple-touch-icon.png"), icon180);
-await writeFile(join(root, "public/favicon.ico"), icon32);
 
-console.log("Wrote public/favicon-32.png, public/apple-touch-icon.png, public/favicon.ico");
+console.log("Wrote src/app/favicon.ico, src/app/apple-icon.png, and public favicon assets");
