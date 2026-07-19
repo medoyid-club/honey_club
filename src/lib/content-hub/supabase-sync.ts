@@ -130,13 +130,18 @@ export async function syncBlogPost(params: {
   const words = gemini.blog_content.trim().split(/\s+/).length;
   const readingMinutes = Math.max(1, Math.ceil(words / 200));
   const excerpt = gemini.blog_excerpt ?? gemini.blog_content.slice(0, 280);
+  let blogContent = gemini.blog_content;
+  const primaryYoutubeId = clubYoutubeIds[0];
+  if (primaryYoutubeId && !blogContent.includes(primaryYoutubeId)) {
+    blogContent = `${blogContent.trim()}\n\nhttps://www.youtube.com/watch?v=${primaryYoutubeId}`;
+  }
 
   const { data, error } = await supabase
     .from("blog_posts")
     .insert({
       author_page_id: pageId,
       slug,
-      ...blogLocaleFields(gemini.blog_locale, gemini.blog_title, excerpt, gemini.blog_content),
+      ...blogLocaleFields(gemini.blog_locale, gemini.blog_title, excerpt, blogContent),
       cover_url: coverUrl,
       reading_minutes: readingMinutes,
       published: false,
