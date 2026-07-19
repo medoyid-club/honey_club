@@ -1,6 +1,7 @@
 import type { Locale } from "@/i18n/routing";
 import { createPublicClient } from "@/lib/supabase/public";
 import type { AuthorSocialLink, AuthorSocialPlatform } from "@/lib/authors/types";
+import { extractYoutubeIdsFromText, youtubeThumbnailUrl } from "@/lib/youtube-id";
 
 export type SocialEntry = { platform: AuthorSocialPlatform; url: string };
 
@@ -73,9 +74,27 @@ export function pick(
   uk: string | null,
   en: string | null
 ): string {
-  if (locale === "uk") return uk ?? ru ?? "";
-  if (locale === "en") return en ?? ru ?? "";
-  return ru ?? "";
+  if (locale === "uk") return uk ?? ru ?? en ?? "";
+  if (locale === "en") return en ?? uk ?? ru ?? "";
+  return ru ?? uk ?? en ?? "";
+}
+
+type BlogCoverSource = {
+  cover_url: string | null;
+  content_ru?: string | null;
+  content_uk?: string | null;
+  content_en?: string | null;
+};
+
+/** Use stored cover, or fall back to the first YouTube thumbnail linked in post content. */
+export function blogCoverFromPost(post: BlogCoverSource): string | null {
+  if (post.cover_url) return post.cover_url;
+  const videoId = extractYoutubeIdsFromText(
+    post.content_ru,
+    post.content_uk,
+    post.content_en
+  )[0];
+  return videoId ? youtubeThumbnailUrl(videoId, "maxresdefault") : null;
 }
 
 const SOCIAL_LABELS: Record<AuthorSocialPlatform, string> = {

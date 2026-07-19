@@ -149,23 +149,24 @@ export async function syncBlogPost(params: {
     return null;
   }
 
-  const coverUrl = await resolveBlogCoverUrl({
-    authorPageId: pageId,
-    photoFileId: post.photoFileId,
-    rawUrls: post.rawUrls,
-    clubYoutubeIds,
-  });
-
-  const supabase = createServiceClient();
-  const slug = await uniqueBlogSlug(pageId, blog.title);
-  const words = blog.content.trim().split(/\s+/).length;
-  const readingMinutes = Math.max(1, Math.ceil(words / 200));
   let blogContent = blog.content;
   const youtubeIds = extractYoutubeIdsFromText(blogContent, ...post.rawUrls, ...clubYoutubeIds);
   const primaryYoutubeId = youtubeIds[0];
   if (primaryYoutubeId && !blogContent.includes(primaryYoutubeId)) {
     blogContent = `${blogContent.trim()}\n\nhttps://www.youtube.com/watch?v=${primaryYoutubeId}`;
   }
+
+  const coverUrl = await resolveBlogCoverUrl({
+    authorPageId: pageId,
+    photoFileId: post.photoFileId,
+    rawUrls: post.rawUrls,
+    clubYoutubeIds: youtubeIds,
+  });
+
+  const supabase = createServiceClient();
+  const slug = await uniqueBlogSlug(pageId, blog.title);
+  const words = blogContent.trim().split(/\s+/).length;
+  const readingMinutes = Math.max(1, Math.ceil(words / 200));
 
   const { data, error } = await supabase
     .from("blog_posts")

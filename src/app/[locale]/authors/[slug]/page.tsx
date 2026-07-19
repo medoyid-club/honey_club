@@ -6,6 +6,7 @@ import type { Locale } from "@/i18n/routing";
 import {
   getPublishedAuthorPageBySlug,
   getPublishedBlogPosts,
+  blogCoverFromPost,
   pick,
 } from "@/lib/authors/db";
 
@@ -27,7 +28,7 @@ export default async function AuthorBlogPage({ params }: Props) {
     excerpt: pick(activeLocale, p.excerpt_ru, p.excerpt_uk, p.excerpt_en),
     publishedAt: p.published_at ?? new Date().toISOString(),
     readingMinutes: p.reading_minutes,
-    coverUrl: p.cover_url,
+    coverUrl: blogCoverFromPost(p),
   }));
 
   return (

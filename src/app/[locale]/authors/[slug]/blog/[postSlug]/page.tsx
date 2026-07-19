@@ -8,6 +8,7 @@ import type { Locale } from "@/i18n/routing";
 import {
   getPublishedAuthorPageBySlug,
   getPublishedBlogPost,
+  blogCoverFromPost,
   pick,
 } from "@/lib/authors/db";
 import { extractYoutubeIdsFromText } from "@/lib/youtube-id";
@@ -34,7 +35,7 @@ export default async function AuthorBlogPostPage({ params }: Props) {
     excerpt: pick(activeLocale, raw.excerpt_ru, raw.excerpt_uk, raw.excerpt_en),
     publishedAt: raw.published_at ?? new Date().toISOString(),
     readingMinutes: raw.reading_minutes,
-    coverUrl: raw.cover_url,
+    coverUrl: blogCoverFromPost(raw),
   };
   const content = pick(activeLocale, raw.content_ru, raw.content_uk, raw.content_en);
   const videoIds = extractYoutubeIdsFromText(
