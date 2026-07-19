@@ -110,7 +110,6 @@ export async function syncBlogPost(params: {
 }): Promise<string | null> {
   const { authorSlug, gemini, post, clubYoutubeIds } = params;
   if (!gemini.blog_title || !gemini.blog_content) return null;
-  if (gemini.content_type === "video") return null;
 
   const pageId = await getAuthorPageId(authorSlug);
   if (!pageId) {
@@ -144,8 +143,8 @@ export async function syncBlogPost(params: {
       ...blogLocaleFields(gemini.blog_locale, gemini.blog_title, excerpt, blogContent),
       cover_url: coverUrl,
       reading_minutes: readingMinutes,
-      published: false,
-      published_at: null,
+      published: true,
+      published_at: new Date().toISOString(),
     })
     .select("id")
     .single();
