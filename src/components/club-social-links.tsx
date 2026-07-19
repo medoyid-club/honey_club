@@ -35,7 +35,7 @@ function GlobeIcon({ className }: { className?: string }) {
 }
 
 const items = [
-  { key: "youtube", href: CLUB_LINKS.youtube, label: "YouTube", Icon: YoutubeIcon },
+  { key: "youtube", href: CLUB_LINKS.youtubePrimary, label: "YouTube", Icon: YoutubeIcon },
   { key: "telegram", href: CLUB_LINKS.telegram, label: "Telegram", Icon: TelegramIcon },
   { key: "facebook", href: CLUB_LINKS.facebook, label: "Facebook", Icon: FacebookIcon },
   { key: "web", href: CLUB_LINKS.web, label: "Web", Icon: GlobeIcon },

@@ -1,5 +1,6 @@
 import { slugify } from "@/lib/slug";
 import { normalizeYoutubeId } from "@/lib/youtube-id";
+import { inferVideoCategorySlug } from "@/lib/youtube/categories";
 import { findAuthorBySlug } from "@/lib/content-hub/authors";
 import { resolveBlogCoverUrl } from "@/lib/content-hub/media";
 import type { ClubYouTubeVideo, ContentLocale, GeminiHubResult, IncomingTelegramPost } from "@/lib/content-hub/types";
@@ -56,30 +57,49 @@ async function uniqueBlogSlug(pageId: string, base: string): Promise<string> {
   return `${slugify(base)}-${Date.now()}`;
 }
 
-async function ensureDefaultVideoCategory(pageId: string): Promise<string | null> {
+async function ensureVideoCategory(pageId: string, categorySlug: string): Promise<string | null> {
   const supabase = createServiceClient();
   const { data: existing } = await supabase
     .from("video_categories")
     .select("id")
     .eq("author_page_id", pageId)
-    .order("position", { ascending: true })
-    .limit(1)
+    .eq("slug", categorySlug)
     .maybeSingle();
 
   if (existing?.id) return existing.id;
+
+  const names: Record<string, { ru: string; uk: string; en: string }> = {
+    philosophy: { ru: "Философия", uk: "Філософія", en: "Philosophy" },
+    psychology: { ru: "Психология", uk: "Психологія", en: "Psychology" },
+    society: { ru: "Общество", uk: "Суспільство", en: "Society" },
+    interviews: { ru: "Интервью", uk: "Інтерв'ю", en: "Interviews" },
+    "content-hub": { ru: "Контент-хаб", uk: "Контент-хаб", en: "Content hub" },
+  };
+  const label = names[categorySlug] ?? names["content-hub"];
+
+  const { count } = await supabase
+    .from("video_categories")
+    .select("id", { count: "exact", head: true })
+    .eq("author_page_id", pageId);
 
   const { data: created } = await supabase
     .from("video_categories")
     .insert({
       author_page_id: pageId,
-      slug: "content-hub",
-      name_ru: "Контент-хаб",
-      position: 1,
+      slug: categorySlug,
+      name_ru: label.ru,
+      name_uk: label.uk,
+      name_en: label.en,
+      position: (count ?? 0) + 1,
     })
     .select("id")
     .single();
 
   return created?.id ?? null;
+}
+
+async function ensureDefaultVideoCategory(pageId: string): Promise<string | null> {
+  return ensureVideoCategory(pageId, "content-hub");
 }
 
 export async function syncBlogPost(params: {
@@ -182,9 +202,12 @@ export async function syncClubVideos(params: {
     const pageId = await getAuthorPageId(slug);
     if (!pageId) continue;
 
-    const categoryId = await ensureDefaultVideoCategory(pageId);
-
     for (const video of clubVideos) {
+      const categorySlug = inferVideoCategorySlug(
+        `${video.title}\n${video.description}\n${video.tags.join(" ")}`
+      );
+      const categoryId = await ensureVideoCategory(pageId, categorySlug);
+
       const youtubeId = normalizeYoutubeId(video.videoId);
       if (!youtubeId) {
         console.warn(`[content-hub] Invalid YouTube id: ${video.videoId}`);
@@ -211,7 +234,7 @@ export async function syncClubVideos(params: {
           category_id: categoryId,
           youtube_id: youtubeId,
           title_ru: video.title,
-          published_at: new Date().toISOString(),
+          published_at: video.publishedAt ?? new Date().toISOString(),
           position: (count ?? 0) + 1,
         })
         .select("id")

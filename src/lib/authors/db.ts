@@ -181,6 +181,7 @@ export async function getVideos(authorPageId: string): Promise<VideoRow[]> {
     .from("videos")
     .select("*")
     .eq("author_page_id", authorPageId)
+    .order("published_at", { ascending: false, nullsFirst: false })
     .order("position", { ascending: true });
   return (data as VideoRow[] | null) ?? [];
 }

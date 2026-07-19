@@ -14,7 +14,7 @@
     "seed:nata-promos": "node scripts/seed-nata-promos.mjs",
     "content-hub:poll": "node scripts/content-hub/poll.mjs",
     "content-hub:webhook": "node scripts/content-hub/setup-webhook.mjs",
-    "generate:favicon": "node scripts/generate-favicon.mjs"
+    "sync:youtube": "node scripts/sync-author-youtube-videos.mjs"
   },
   "dependencies": {
     "@base-ui/react": "^1.5.0",

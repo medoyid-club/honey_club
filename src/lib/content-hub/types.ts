@@ -16,6 +16,8 @@ export type ClubYouTubeVideo = {
   title: string;
   description: string;
   channelHandle: "honey_erbe" | "medoyid-club";
+  publishedAt: string | null;
+  tags: string[];
 };
 
 export type GeminiHubResult = {

@@ -223,7 +223,8 @@
       "subtitle": "Articles and notes by the author.",
       "read": "Article",
       "minutes": "min",
-      "comingSoon": "The full article will be published soon. For now, browse previews and stay tuned for updates."
+      "comingSoon": "The full article will be published soon. For now, browse previews and stay tuned for updates.",
+      "watchVideo": "Watch video"
     },
     "courses": {
       "title": "Author's courses",
@@ -233,15 +234,16 @@
     },
     "videos": {
       "title": "Video library",
-      "subtitle": "A curated selection from the author's YouTube channel by topic.",
-      "channelHint": "The full feed is on the author's YouTube channel.",
+      "subtitle": "Videos from the Medoyid Club YouTube channel (@honey_erbe) featuring this author.",
+      "channelHint": "All author videos are on the main Medoyid Club channel.",
       "openChannel": "Open channel",
       "watch": "Watch",
       "categories": {
         "all": "All",
         "philosophy": "Philosophy",
         "psychology": "Psychology",
-        "society": "Society"
+        "society": "Society",
+        "interviews": "Interviews"
       }
     },
     "about": {

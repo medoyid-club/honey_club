@@ -76,7 +76,7 @@ export function buildAuthorFooterHtml(author: AuthorHubConfig): string {
   const parts: string[] = [
     `<a href="${CLUB_LINKS.web}">Web</a>`,
     `<a href="${CLUB_LINKS.telegram}">Telegram</a>`,
-    `<a href="${CLUB_LINKS.youtube}">YouTube</a>`,
+    `<a href="${CLUB_LINKS.youtubePrimary}">YouTube</a>`,
     `<a href="${CLUB_LINKS.facebook}">Facebook</a>`,
     `<a href="${authorWebUrl(author)}">${author.displayNameRu}</a>`,
     `<a href="${author.telegramUrl}">Telegram автора</a>`,

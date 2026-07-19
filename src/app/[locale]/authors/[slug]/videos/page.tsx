@@ -6,13 +6,13 @@ import { AuthorVideoCategoryTabs } from "@/components/authors/author-video-categ
 import { Button } from "@/components/ui/button";
 import type { Locale } from "@/i18n/routing";
 import {
-  authorYoutubeChannel,
   getPublishedAuthorPageBySlug,
   getVideoCategories,
   getVideos,
   pick,
   youtubeWatchUrl,
 } from "@/lib/authors/db";
+import { CLUB_LINKS } from "@/lib/club-links";
 
 type Props = {
   params: Promise<{ locale: string; slug: string }>;
@@ -38,7 +38,7 @@ export default async function AuthorVideosPage({ params, searchParams }: Props) 
   const active = categoryParam && validSlugs.has(categoryParam) ? categoryParam : "all";
   const categoryById = new Map(categories.map((c) => [c.id, c]));
 
-  const channelUrl = authorYoutubeChannel(page.socials);
+  const channelUrl = CLUB_LINKS.youtubePrimary;
 
   const videos = videoRows
     .filter((v) => {
@@ -81,7 +81,7 @@ export default async function AuthorVideosPage({ params, searchParams }: Props) 
         />
       </header>
 
-      {channelUrl && (
+      {channelUrl ? (
         <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-primary/15 bg-primary/5 px-4 py-3">
           <p className="text-sm text-muted-foreground">{t("channelHint")}</p>
           <Button
@@ -94,7 +94,7 @@ export default async function AuthorVideosPage({ params, searchParams }: Props) 
             {t("openChannel")}
           </Button>
         </div>
-      )}
+      ) : null}
 
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
         {videos.map((video) => (

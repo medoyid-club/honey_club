@@ -22,6 +22,15 @@ export function normalizeYoutubeId(input: string): string | null {
   return YOUTUBE_ID_STANDALONE.test(parsed) ? parsed : null;
 }
 
+export function extractYoutubeIdsFromText(...parts: Array<string | null | undefined>): string[] {
+  const text = parts.filter(Boolean).join("\n");
+  const ids = new Set<string>();
+  for (const match of text.matchAll(YOUTUBE_ID_IN_URL)) {
+    if (match[1]) ids.add(match[1]);
+  }
+  return [...ids];
+}
+
 export function uniqueYoutubeIds(inputs: string[]): string[] {
   const ids = new Set<string>();
   for (const input of inputs) {
