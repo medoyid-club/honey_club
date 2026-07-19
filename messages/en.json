@@ -315,6 +315,8 @@
       "publish": "Publish",
       "unpublish": "Unpublish",
       "saved": "Saved",
+      "saveError": "Could not save the profile. Please try again.",
+      "uploadError": "Could not upload the image. Use JPG or PNG up to 10 MB.",
       "basics": "Basics",
       "displayName": "Name",
       "slug": "Page address (slug)",

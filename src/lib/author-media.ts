@@ -12,6 +12,10 @@ export async function uploadAuthorMedia(
 
   if (file instanceof File) {
     if (!file.size) return null;
+    if (!file.type.startsWith("image/")) {
+      console.warn("[author-media] rejected non-image upload:", file.type);
+      return null;
+    }
     buffer = Buffer.from(await file.arrayBuffer());
     contentType = file.type || "image/jpeg";
     ext = (file.name.split(".").pop() || "jpg").toLowerCase();
@@ -28,7 +32,10 @@ export async function uploadAuthorMedia(
     upsert: true,
   });
 
-  if (error) return null;
+  if (error) {
+    console.error("[author-media] upload failed:", error.message);
+    return null;
+  }
 
   const { data } = supabase.storage.from("author-media").getPublicUrl(path);
   return data.publicUrl;

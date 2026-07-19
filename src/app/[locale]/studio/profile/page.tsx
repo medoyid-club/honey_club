@@ -17,7 +17,7 @@ import type { SocialEntry } from "@/lib/authors/db";
 
 type Props = {
   params: Promise<{ locale: string }>;
-  searchParams: Promise<{ saved?: string }>;
+  searchParams: Promise<{ saved?: string; error?: string }>;
 };
 
 const inputClass =
@@ -26,7 +26,7 @@ const inputClass =
 export default async function StudioProfilePage({ params, searchParams }: Props) {
   const { locale } = await params;
   setRequestLocale(locale);
-  const { saved } = await searchParams;
+  const { saved, error } = await searchParams;
 
   const { page } = await getStudioContext(locale);
   const t = await getTranslations("Studio.profileForm");
@@ -59,7 +59,18 @@ export default async function StudioProfilePage({ params, searchParams }: Props)
         </div>
       )}
 
-      <form id="studio-profile-form" action={updateAuthorProfile} className="space-y-6">
+      {error && (
+        <div className="rounded-lg border border-destructive/40 bg-destructive/5 p-3 text-sm text-destructive">
+          {error === "upload" ? t("uploadError") : t("saveError")}
+        </div>
+      )}
+
+      <form
+        id="studio-profile-form"
+        action={updateAuthorProfile}
+        className="space-y-6"
+        encType="multipart/form-data"
+      >
         <input type="hidden" name="locale" value={locale} />
 
         <Card>
