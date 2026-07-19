@@ -1,7 +1,8 @@
 import { slugify } from "@/lib/slug";
-import { normalizeYoutubeId } from "@/lib/youtube-id";
+import { normalizeYoutubeId, extractYoutubeIdsFromText } from "@/lib/youtube-id";
 import { inferVideoCategorySlug } from "@/lib/youtube/categories";
 import { findAuthorBySlug } from "@/lib/content-hub/authors";
+import { detectLocaleFromText } from "@/lib/content-hub/detect-locale";
 import { resolveBlogCoverUrl } from "@/lib/content-hub/media";
 import type { ClubYouTubeVideo, ContentLocale, GeminiHubResult, IncomingTelegramPost } from "@/lib/content-hub/types";
 import { createServiceClient } from "@/lib/supabase/service";
@@ -102,6 +103,36 @@ async function ensureDefaultVideoCategory(pageId: string): Promise<string | null
   return ensureVideoCategory(pageId, "content-hub");
 }
 
+function firstMeaningfulLine(text: string): string {
+  for (const line of text.split(/\n/)) {
+    const trimmed = line.trim();
+    if (trimmed.length >= 20) return trimmed.slice(0, 120);
+  }
+  return text.trim().slice(0, 120) || "Статья";
+}
+
+function resolveBlogFields(
+  gemini: GeminiHubResult,
+  post: IncomingTelegramPost
+): {
+  locale: ContentLocale;
+  title: string;
+  content: string;
+  excerpt: string;
+} | null {
+  const sourceText = post.text.trim();
+  if (!sourceText) return null;
+
+  const content = gemini.blog_content?.trim() || sourceText;
+  if (content.length < 40) return null;
+
+  const locale = gemini.blog_locale ?? detectLocaleFromText(sourceText);
+  const title = gemini.blog_title?.trim() || firstMeaningfulLine(sourceText);
+  const excerpt = gemini.blog_excerpt?.trim() || content.slice(0, 280);
+
+  return { locale, title, content, excerpt };
+}
+
 export async function syncBlogPost(params: {
   authorSlug: string;
   gemini: GeminiHubResult;
@@ -109,7 +140,8 @@ export async function syncBlogPost(params: {
   clubYoutubeIds: string[];
 }): Promise<string | null> {
   const { authorSlug, gemini, post, clubYoutubeIds } = params;
-  if (!gemini.blog_title || !gemini.blog_content) return null;
+  const blog = resolveBlogFields(gemini, post);
+  if (!blog) return null;
 
   const pageId = await getAuthorPageId(authorSlug);
   if (!pageId) {
@@ -125,12 +157,12 @@ export async function syncBlogPost(params: {
   });
 
   const supabase = createServiceClient();
-  const slug = await uniqueBlogSlug(pageId, gemini.blog_title);
-  const words = gemini.blog_content.trim().split(/\s+/).length;
+  const slug = await uniqueBlogSlug(pageId, blog.title);
+  const words = blog.content.trim().split(/\s+/).length;
   const readingMinutes = Math.max(1, Math.ceil(words / 200));
-  const excerpt = gemini.blog_excerpt ?? gemini.blog_content.slice(0, 280);
-  let blogContent = gemini.blog_content;
-  const primaryYoutubeId = clubYoutubeIds[0];
+  let blogContent = blog.content;
+  const youtubeIds = extractYoutubeIdsFromText(blogContent, ...post.rawUrls, ...clubYoutubeIds);
+  const primaryYoutubeId = youtubeIds[0];
   if (primaryYoutubeId && !blogContent.includes(primaryYoutubeId)) {
     blogContent = `${blogContent.trim()}\n\nhttps://www.youtube.com/watch?v=${primaryYoutubeId}`;
   }
@@ -140,7 +172,7 @@ export async function syncBlogPost(params: {
     .insert({
       author_page_id: pageId,
       slug,
-      ...blogLocaleFields(gemini.blog_locale, gemini.blog_title, excerpt, blogContent),
+      ...blogLocaleFields(blog.locale, blog.title, blog.excerpt, blogContent),
       cover_url: coverUrl,
       reading_minutes: readingMinutes,
       published: true,
